@@ -7,4 +7,12 @@
         Manager= 20,
         SuperAdmin = 100
     }
+
+    public enum MaxLengthLimit
+    {
+        Name = 150,
+        ShortName = 100,
+        Description = 500,
+        ShortDescription = 100
+    }
 }
