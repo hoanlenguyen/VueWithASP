@@ -7,6 +7,20 @@ namespace webapi.Model.Identity
 {
     public class User : IdentityUser<int>, IAuditEntity
     {
+        //[Required]
+        //[MaxLength(100)]
+        //public override string UserName { get; set; }
+
+        //[MaxLength(100)]
+        //public override string? NormalizedUserName { get; set; }
+
+        //[MaxLength(100)]
+        //[ProtectedPersonalData]
+        //public virtual string? Email { get; set; }
+
+        //[MaxLength(100)]
+        //public virtual string? NormalizedEmail { get; set; }
+
         [Required]
         [MaxLength(150)]
         public string Name { get; set; } = string.Empty;

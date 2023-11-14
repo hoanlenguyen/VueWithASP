@@ -2,6 +2,7 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using webapi.Data;
 using webapi.Model.Identity;
+using webapi.Services;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -133,16 +134,14 @@ app.UseHttpsRedirection();
 //app.MapHub<HubClient>("/hubClient");
 
 //add Services
-//app.AddAdminUserService();
-//app.AddRoleDataService();
-//app.AddBankDataService();
-//app.AddBrandDataService();
-//app.AddDepartmentDataService();
-//app.AddRankDataService();
-//app.AddEmployeeDataService();
-//app.AddCurrencyDataService();
-//app.AddFileDataService();
-//app.AddStaffRecordDataService(mySQLConnection.ConnectionString);
-//app.AddLeaveHistoryService(mySQLConnection.ConnectionString);
+app.AddProductService();
+
+using (var scope = app.Services.CreateScope())
+{
+    var dbInitializer = scope.ServiceProvider.GetRequiredService<ApplicationDbContext>();
+    var userManager = scope.ServiceProvider.GetRequiredService<UserManager<User>>();
+    await DbInitializer.Initialize(dbInitializer, userManager);
+}
+
 
 app.Run();

@@ -2,7 +2,7 @@
 
 namespace webapi.Model.BaseEntity
 {
-    public abstract class BaseEntity
+    public abstract class BaseEntityModel
     {
         [Key]
         public int Id { get; set; }
@@ -19,7 +19,7 @@ namespace webapi.Model.BaseEntity
         public bool IsDeleted { get; set; }
     }
 
-    public abstract class BaseAuditEntity : BaseEntity, IAuditEntity
+    public abstract class BaseAuditEntity : BaseEntityModel, IAuditEntity
     {
         public DateTime CreationTime { get; set; } = DateTime.UtcNow.AddHours(1);
         public int? CreatorUserId { get; set; }
