@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Identity;
+using Microsoft.EntityFrameworkCore;
 using webapi.Enum;
 using webapi.Model.Identity;
 using webapi.Model.Production;
@@ -12,6 +13,7 @@ namespace webapi.Data
             ArgumentNullException.ThrowIfNull(dbContext, nameof(dbContext));
             ArgumentNullException.ThrowIfNull(userManager, nameof(userManager));
             dbContext.Database.EnsureCreated();
+            dbContext.Database.Migrate();
             if (dbContext.Users.Any() && dbContext.Products.Any())
                 return;
             Console.WriteLine("Initializing DB.....");

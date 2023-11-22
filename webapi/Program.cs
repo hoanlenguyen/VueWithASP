@@ -136,12 +136,16 @@ app.UseHttpsRedirection();
 //add Services
 app.AddProductService();
 
-using (var scope = app.Services.CreateScope())
+if(app.Environment.IsDevelopment())
 {
-    var dbInitializer = scope.ServiceProvider.GetRequiredService<ApplicationDbContext>();
-    var userManager = scope.ServiceProvider.GetRequiredService<UserManager<User>>();
-    await DbInitializer.Initialize(dbInitializer, userManager);
+    using (var scope = app.Services.CreateScope())
+    {
+        var dbInitializer = scope.ServiceProvider.GetRequiredService<ApplicationDbContext>();
+        var userManager = scope.ServiceProvider.GetRequiredService<UserManager<User>>();
+        await DbInitializer.Initialize(dbInitializer, userManager);
+    }
 }
+
 
 
 app.Run();
