@@ -49,6 +49,13 @@ namespace webapi.Services
 
                 return Results.Ok(products);
             });
+
+            //app.MapGet("/products", [AllowAnonymous] async ([FromServices] ApplicationDbContext db, [FromUri] int[] ids) =>
+            //{
+            //    //var products = db.Products.Where(p => p.ProductTags.Any(pt => pt.TagId == id)).ProjectToType<ProductDTO>();
+
+            //    return Results.Ok(ids);
+            //});
         }
     }
 }
