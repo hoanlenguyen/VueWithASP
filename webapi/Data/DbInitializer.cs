@@ -1,6 +1,5 @@
 ﻿using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
-using System.Collections.Generic;
 using webapi.Enum;
 using webapi.Model.Identity;
 using webapi.Model.Production;
@@ -14,7 +13,7 @@ namespace webapi.Data
             ArgumentNullException.ThrowIfNull(dbContext, nameof(dbContext));
             ArgumentNullException.ThrowIfNull(userManager, nameof(userManager));
             dbContext.Database.EnsureCreated();
-            dbContext.Database.Migrate();
+            //dbContext.Database.Migrate();
 
             Console.WriteLine("Initializing DB.....");
             List<ProductCategory> categories;
@@ -48,9 +47,8 @@ namespace webapi.Data
             }
             else
             {
-                categories = await dbContext.ProductCategories.ToListAsync(); 
+                categories = await dbContext.ProductCategories.ToListAsync();
             }
-
 
             if (!(await dbContext.Brands.AnyAsync()))
             {
@@ -93,17 +91,19 @@ namespace webapi.Data
                 {
                     products.Add(new Product
                     {
-                        Name = $"Product {i+1}",
-                        CategoryId = categories[radom.Next(categories.Count -1)].Id,
+                        Name = $"Product {i + 1}",
+                        CategoryId = categories[radom.Next(categories.Count - 1)].Id,
                         BrandId = brands[radom.Next(brands.Count - 1)].Id,
-                        Description = "Description of Product....",
+                        Description = $"Description of Product {i + 1}....",
+                        AvatarUrl = $"c{i + 1}.png",
+                        Price = (decimal)radom.Next(100, 10000) / 100,
                         ProductTags = new List<ProductTag>
                         {
                             new ProductTag { TagId = tags[radom.Next(0,1)].Id },
                             new ProductTag { TagId = tags[radom.Next(2,3)].Id },
                         }
                     });
-                }                 
+                }
                 await dbContext.AddRangeAsync(products);
                 dbContext.SaveChanges();
             }

@@ -3,7 +3,7 @@ using webapi.Model.BaseEntity;
 
 namespace webapi.Model.Production
 {
-    public class ProductTag: Entity
+    public class ProductTag : Entity
     {
         public int TagId { get; set; }
         public int ProductId { get; set; }

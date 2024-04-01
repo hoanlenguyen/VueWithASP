@@ -11,6 +11,10 @@ namespace webapi.Model.Production
 
         public string ShortDescription { get; set; } = string.Empty;
 
+        public string? AvatarUrl { get; set; } = string.Empty;
+
+        public decimal? Price { get; set; }
+
         public int? CategoryId { get; set; }
         public string? CategoryName { get; set; }
 

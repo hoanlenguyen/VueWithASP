@@ -140,7 +140,7 @@ app.UseHttpsRedirection();
 //add Services
 app.AddProductService();
 
-if(app.Environment.IsDevelopment())
+if (app.Environment.IsDevelopment())
 {
     using (var scope = app.Services.CreateScope())
     {
@@ -149,7 +149,5 @@ if(app.Environment.IsDevelopment())
         await DbInitializer.Initialize(dbInitializer, userManager);
     }
 }
-
-
 
 app.Run();

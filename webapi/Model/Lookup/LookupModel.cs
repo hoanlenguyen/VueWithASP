@@ -1,6 +1,4 @@
-﻿using System.Collections.Generic;
-
-namespace webapi.Model.Lookup
+﻿namespace webapi.Model.Lookup
 {
     public interface ILookupModel
     {

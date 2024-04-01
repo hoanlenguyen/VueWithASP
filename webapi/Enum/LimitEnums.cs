@@ -6,5 +6,6 @@
         public const int ShortName = 50;
         public const int FullDescription = 500;
         public const int ShortDescription = 100;
+        public const int ShortUrl = 200;
     }
 }

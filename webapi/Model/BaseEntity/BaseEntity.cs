@@ -1,8 +1,5 @@
-﻿using System.ComponentModel.DataAnnotations;
-
-namespace webapi.Model.BaseEntity
+﻿namespace webapi.Model.BaseEntity
 {
-
     public interface IAuditEntity
     {
         public int Id { get; set; }

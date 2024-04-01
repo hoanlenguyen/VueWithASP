@@ -4,7 +4,7 @@ using webapi.Model.BaseEntity;
 
 namespace webapi.Model.Production
 {
-    public class Tag: Entity
+    public class Tag : Entity
     {
         [Required]
         [MaxLength(LimitLength.ShortName)]
