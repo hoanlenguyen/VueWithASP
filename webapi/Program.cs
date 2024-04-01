@@ -1,6 +1,7 @@
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using webapi.Data;
+using webapi.Mapper;
 using webapi.Model.Identity;
 using webapi.Services;
 
@@ -14,6 +15,9 @@ builder.Services.AddDbContext<ApplicationDbContext>(options => options.UseSqlSer
 builder.Services.AddIdentity<User, Role>()
                 .AddEntityFrameworkStores<ApplicationDbContext>()
                 .AddDefaultTokenProviders();
+
+//add extra mapp config
+MapperConfig.AddMapperConfigs();
 
 //add CORS
 //var allowSpecificOriginsPolicy = "AllowSpecificOriginsPolicy";

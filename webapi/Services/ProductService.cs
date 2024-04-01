@@ -1,7 +1,9 @@
-﻿using Microsoft.AspNetCore.Authorization;
+﻿using Mapster;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using webapi.Data;
+using webapi.Model.Production;
 
 namespace webapi.Services
 {
@@ -9,9 +11,9 @@ namespace webapi.Services
     {
         public static void AddProductService(this WebApplication app)
         {
-            app.MapPost("product", [AllowAnonymous] async ([FromServices] ApplicationDbContext db) =>
+            app.MapGet("product", [AllowAnonymous] async ([FromServices] ApplicationDbContext db) =>
             {
-                var products = await db.Products./*Include(p => p.Category).*/Select(p => new { p.Id, p.Name,/* Category = p.Category!.Name*/ }).ToListAsync();
+                var products = db.Products.ProjectToType<ProductDTO>();
 
                 return Results.Ok(products);
             });

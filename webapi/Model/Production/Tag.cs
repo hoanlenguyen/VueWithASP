@@ -1,11 +1,10 @@
-﻿using Microsoft.Extensions.Hosting;
-using System.ComponentModel.DataAnnotations;
+﻿using System.ComponentModel.DataAnnotations;
 using webapi.Enum;
 using webapi.Model.BaseEntity;
 
 namespace webapi.Model.Production
 {
-    public class Tag: BaseEntityModel
+    public class Tag: Entity
     {
         [Required]
         [MaxLength(LimitLength.ShortName)]
