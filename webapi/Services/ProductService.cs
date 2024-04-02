@@ -29,6 +29,18 @@ namespace webapi.Services
                 return product != null ? Results.Ok(product.Adapt<ProductDTO>()) : Results.NotFound();
             });
 
+            app.MapGet("products/all", [AllowAnonymous] async Task<IResult> ([FromServices] ApplicationDbContext db,  int[] ids) =>
+            {
+                var products =  db.Products
+                                .Include(p => p.Category)
+                                .Include(p => p.Brand)
+                                .Include(p => p.ProductTags)
+                                .ThenInclude(pt => pt.Tag)
+                                .Where(p => ids.Contains( p.Id ))
+                                .ProjectToType<ProductDTO>();
+                return  Results.Ok(products);
+            });
+
             app.MapGet("category/{id:int}/products", [AllowAnonymous] async ([FromServices] ApplicationDbContext db, int id) =>
             {
                 var products = db.Products.Where(p => p.CategoryId == id).ProjectToType<ProductDTO>();
