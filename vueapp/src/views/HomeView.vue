@@ -120,8 +120,10 @@
 // Components
 import { ref, onBeforeMount } from 'vue'
 import type { ICategory, IChair } from '../types/index'
+import type { IProducton as IProduction } from '@/types/Production'
 import NavBar from '@/components/NavBar.vue'
 import FooterView from '@/components/FooterView.vue'
+import {useProductonApi} from '@/services'
 const chair = ref<boolean>(true)
 const other = ref<boolean>(false)
 const slider2 = ref<number>(50)
@@ -133,6 +135,13 @@ const categories = ref<ICategory[]>([
   { img: '8.jpg', title: 'TABLES NIGHTSTANDS' },
   { img: '6.png', title: 'KITCHEN FURNITURE' }
 ] as ICategory[])
+
+const productonApi = useProductonApi();
+const production = ref<IProduction>({} as IProduction);
+onBeforeMount(async () => {
+  production.value = await productonApi.get(1);
+  console.log(production.value)
+});
 
 const chairs = ref<IChair[]>([
   {
@@ -231,7 +240,10 @@ const chairs = ref<IChair[]>([
     title: 'Modern Lounge',
     price: '$ 145.00'
   }
-] as IChair[])
+] as IChair[]);
+
+
+
 </script>
 <style scoped>
 .v-container {

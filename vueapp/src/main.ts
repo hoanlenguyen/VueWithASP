@@ -13,7 +13,8 @@ loadFonts()
 
 const app = createApp(App)
 const baseApiUrl = import.meta.env.VITE_Api_Url;
-
+console.log('baseApiUrl')
+console.log(baseApiUrl)
 app.use(createPinia())
 app.use(router)
 app.use(vuetify)
