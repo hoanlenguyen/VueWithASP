@@ -20,19 +20,19 @@ builder.Services.AddIdentity<User, Role>()
 MapperConfig.AddMapperConfigs();
 
 //add CORS
-//var allowSpecificOriginsPolicy = "AllowSpecificOriginsPolicy";
-//var corsOrigins = (builder.Configuration["CorsOrigins"] ?? "http://localhost:8080").Split(',');
-//builder.Services.AddCors(options =>
-//{
-//    options.AddPolicy(name: allowSpecificOriginsPolicy, builder =>
-//    {
-//        builder.WithOrigins(corsOrigins)
-//               .AllowAnyHeader()
-//               .AllowAnyMethod()
-//               .SetIsOriginAllowed((_) => true)
-//               .AllowCredentials();
-//    });
-//});
+var allowSpecificOriginsPolicy = "AllowSpecificOriginsPolicy";
+var corsOrigins = (builder.Configuration["CorsOrigins"] ?? "http://localhost:3000").Split(',');
+builder.Services.AddCors(options =>
+{
+    options.AddPolicy(name: allowSpecificOriginsPolicy, builder =>
+    {
+        builder.WithOrigins(corsOrigins)
+               .AllowAnyHeader()
+               .AllowAnyMethod()
+               .SetIsOriginAllowed((_) => true)
+               .AllowCredentials();
+    });
+});
 
 //add SignalR
 //builder.Services.AddSignalR().AddHubOptions<HubClient>(options => options.EnableDetailedErrors = true);
@@ -130,7 +130,7 @@ if (app.Environment.IsDevelopment())
 
 // CORS & Authen & Authorize
 app.UseHttpsRedirection();
-//app.UseCors(allowSpecificOriginsPolicy);
+app.UseCors(allowSpecificOriginsPolicy);
 //app.UseAuthentication();
 //app.UseAuthorization();
 

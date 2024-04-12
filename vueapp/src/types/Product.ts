@@ -1,7 +1,7 @@
 import { IdentityModel, type IIdentityModel } from '@/types/base/IdentityModel';
-// import type { IProductonContact } from './productonContact';
+// import type { IProductionContact } from './productonContact';
 
-export interface IProducton extends IIdentityModel {
+export interface IProduct extends IIdentityModel {
   name: string | null;
   description: string | null;
   shortDescription: string | null;
@@ -20,15 +20,15 @@ export interface IProducton extends IIdentityModel {
   // public virtual ICollection<ProductTag> ProductTags { get; set; } = new HashSet<ProductTag>();
 }
 
-export class Production extends IdentityModel implements IProducton {
+export class Product extends IdentityModel implements IProduct {
 
-  // static hasAddress(producton: IProducton) : boolean {
+  // static hasAddress(producton: IProduction) : boolean {
   //   return !!producton.addressLine1;
   // }
 
-  constructor(producton?: Partial<IProducton>) {
-    super(producton);
-    Object.assign(this, producton);
+  constructor(product?: Partial<IProduct>) {
+    super(product);
+    Object.assign(this, product);
   }
 
   name: string | null = null;

@@ -91,14 +91,14 @@
         <v-btn variant="text" color="grey">Price</v-btn>
       </v-toolbar>
       <v-row>
-        <v-col cols="12" sm="3" v-for="(chair, i) in chairs" :key="i">
+        <v-col cols="12" sm="3" v-for="(product, i) in products" :key="i">
           <v-card height="300" align="center" flat outlined tile>
-            <v-img :src="chair.image" width="200" height="200" contain></v-img>
+            <v-img :src="product.avatarUrl!" width="200" height="200" contain></v-img>
             <v-card-text class="mt-n1">
-              <strong>{{ chair.title }}</strong>
+              <strong>{{ product.name }}</strong>
             </v-card-text>
             <v-card-text class="mt-n4">
-              <strong>{{ chair.price }}</strong>
+              <strong>{{ product.price }}</strong>
             </v-card-text>
           </v-card>
         </v-col>
@@ -120,10 +120,10 @@
 // Components
 import { ref, onBeforeMount } from 'vue'
 import type { ICategory, IChair } from '../types/index'
-import type { IProducton as IProduction } from '@/types/Production'
+import type {  IProduct } from '@/types/Product'
 import NavBar from '@/components/NavBar.vue'
 import FooterView from '@/components/FooterView.vue'
-import {useProductonApi} from '@/services'
+import {useProductApi} from '@/services'
 const chair = ref<boolean>(true)
 const other = ref<boolean>(false)
 const slider2 = ref<number>(50)
@@ -136,11 +136,11 @@ const categories = ref<ICategory[]>([
   { img: '6.png', title: 'KITCHEN FURNITURE' }
 ] as ICategory[])
 
-const productonApi = useProductonApi();
-const production = ref<IProduction>({} as IProduction);
+const productApi = useProductApi();
+const products = ref<IProduct[]>([]);
 onBeforeMount(async () => {
-  production.value = await productonApi.get(1);
-  console.log(production.value)
+  products.value = await productApi.getAll({});
+  console.log(products.value)
 });
 
 const chairs = ref<IChair[]>([
@@ -259,3 +259,4 @@ const chairs = ref<IChair[]>([
   border: 1px solid #d5f0db !important;
 }
 </style>
+@/types/Product

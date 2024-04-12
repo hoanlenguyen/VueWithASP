@@ -1,5 +1,5 @@
-import useProductonApi from '@/services/ProductionApi';
+import useProductApi from '@/services/ProductApi';
 
 export {
-    useProductonApi
+    useProductApi
 }

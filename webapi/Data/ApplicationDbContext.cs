@@ -1,7 +1,7 @@
 ﻿using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 using webapi.Model.Identity;
-using webapi.Model.Production;
+using webapi.Model.Product;
 
 namespace webapi.Data
 {

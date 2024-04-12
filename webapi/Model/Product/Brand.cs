@@ -2,9 +2,9 @@
 using webapi.Enum;
 using webapi.Model.BaseEntity;
 
-namespace webapi.Model.Production
+namespace webapi.Model.Product
 {
-    public class ProductCategory : BaseAuditEntity
+    public class Brand : BaseAuditEntity
     {
         [Required]
         [MaxLength(LimitLength.FullName)]

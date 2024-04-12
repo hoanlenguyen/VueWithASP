@@ -6,6 +6,5 @@
         Admin = 10,
         Manager= 20,
         SuperAdmin = 100
-    }
- 
+    } 
 }

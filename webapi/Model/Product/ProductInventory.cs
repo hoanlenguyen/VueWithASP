@@ -1,4 +1,4 @@
-﻿namespace webapi.Model.Production
+﻿namespace webapi.Model.Product
 {
     public class ProductInventory
     {

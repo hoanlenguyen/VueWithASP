@@ -2,7 +2,7 @@
 using webapi.Enum;
 using webapi.Model.BaseEntity;
 
-namespace webapi.Model.Production
+namespace webapi.Model.Product
 {
     public class Tag : Entity
     {

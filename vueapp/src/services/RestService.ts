@@ -8,7 +8,7 @@ export default function useRestApi<T extends IIdentityModel>(apiRoute: string) :
   // const httpService = HttpService;
   const httpService = PublicHttpService;
 
-  const setStatus = (entity: T | null, httpStatusCode?: number, eTag?: string) : T | null => {
+  const setStatus = (entity: T |  null, httpStatusCode?: number, eTag?: string) : T | null => {
     if(entity && httpStatusCode !== undefined) {
       entity.httpStatusCode = httpStatusCode;
       entity.eTag = eTag;
@@ -37,5 +37,11 @@ export default function useRestApi<T extends IIdentityModel>(apiRoute: string) :
     return response.headers['etag'];
   }
 
-  return {get, put, post, delete: deleteId} as IRestApi<T>
+  const getAll = async (filter: any): Promise<T[] | null> => {
+    const response = await httpService.get<T[]>(`${apiRoute}`, filter);
+    // const eTag = response.headers['etag'];
+    return response?.data;
+  }
+
+  return {get, put, post, getAll, delete : deleteId} as IRestApi<T>
 }

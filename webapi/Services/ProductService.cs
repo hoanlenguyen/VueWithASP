@@ -2,8 +2,12 @@
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.IdentityModel.Tokens;
+using System.Linq;
 using webapi.Data;
-using webapi.Model.Production;
+using webapi.Helper;
+using webapi.Model.Product;
+using webapi.Paging;
 
 namespace webapi.Services
 {
@@ -11,11 +15,21 @@ namespace webapi.Services
     {
         public static void AddProductService(this WebApplication app)
         {
-            app.MapGet("products", [AllowAnonymous] async ([FromServices] ApplicationDbContext db) =>
+            app.MapGet("products", [AllowAnonymous] async ([FromServices] ApplicationDbContext db, [AsParameters] ProductFilter request) =>
             {
-                var products = db.Products.ProjectToType<ProductDTO>();
+                var query = db.Products
+                            .Include(p => p.Category)
+                            .Include(p => p.Brand)
+                            .Include(p => p.ProductTags)
+                            .ThenInclude(pt => pt.Tag)
+                            .WhereIf(!request.Name.IsNullOrEmpty(), p => p.Name.Contains(request.Name!));
 
-                return Results.Ok(products);
+                var totalCount = await query.CountAsync();
+
+                var items = await query.OrderAndPaging(request)
+                                       .ProjectToType<ProductDTO>()
+                                       .ToListAsync();
+                return Results.Ok(new PagedResultDto<ProductDTO>(totalCount, items));
             });
 
             app.MapGet("products/{id:int}", [AllowAnonymous] async Task<IResult> ([FromServices] ApplicationDbContext db, int id) =>
@@ -27,19 +41,7 @@ namespace webapi.Services
                                 .ThenInclude(pt => pt.Tag)
                                 .FirstOrDefaultAsync(p => p.Id == id);
                 return product != null ? Results.Ok(product.Adapt<ProductDTO>()) : Results.NotFound();
-            });
-
-            app.MapGet("products/all", [AllowAnonymous] async Task<IResult> ([FromServices] ApplicationDbContext db,  int[] ids) =>
-            {
-                var products =  db.Products
-                                .Include(p => p.Category)
-                                .Include(p => p.Brand)
-                                .Include(p => p.ProductTags)
-                                .ThenInclude(pt => pt.Tag)
-                                .Where(p => ids.Contains( p.Id ))
-                                .ProjectToType<ProductDTO>();
-                return  Results.Ok(products);
-            });
+            }); 
 
             app.MapGet("category/{id:int}/products", [AllowAnonymous] async ([FromServices] ApplicationDbContext db, int id) =>
             {
