@@ -3,7 +3,6 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
-using System.Linq;
 using webapi.Data;
 using webapi.Helper;
 using webapi.Model.Product;
@@ -22,13 +21,21 @@ namespace webapi.Services
                             .Include(p => p.Brand)
                             .Include(p => p.ProductTags)
                             .ThenInclude(pt => pt.Tag)
-                            .WhereIf(!request.Name.IsNullOrEmpty(), p => p.Name.Contains(request.Name!));
+                            .AsNoTracking()
+                            .WhereIf(request.Name.IsNotNullOrEmpty(), p => p.Name.Contains(request.Name!))
+                            .WhereIf(request.CategoryId.HasValue, p => p.CategoryId == request.CategoryId)
+                            .WhereIf(request.BrandId.HasValue, p => p.BrandId == request.BrandId)
+                            .WhereIf(request.PriceFrom.HasValue, p => p.Price >= request.PriceFrom)
+                            .WhereIf(request.PriceTo.HasValue, p => p.Price <= request.PriceTo)
+                            ;
 
                 var totalCount = await query.CountAsync();
 
-                var items = await query.OrderAndPaging(request)
-                                       .ProjectToType<ProductDTO>()
-                                       .ToListAsync();
+                 
+                var items = totalCount > 0 ? 
+                                await query.OrderAndPaging(request).ProjectToType<ProductDTO>().ToListAsync() :
+                                new List<ProductDTO>();
+
                 return Results.Ok(new PagedResultDto<ProductDTO>(totalCount, items));
             });
 

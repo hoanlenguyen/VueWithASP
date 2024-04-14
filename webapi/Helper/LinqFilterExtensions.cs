@@ -32,10 +32,13 @@ namespace webapi.Helper
  
         public static IQueryable<T> OrderAndPaging<T>(this IQueryable<T> query, BaseFilterDto filter) /*where T : class*/
         {
-            if (!filter.SortBy.IsNullOrEmpty())
+            if (filter.SortBy.IsNotNullOrEmpty())
                 query = query.OrderByDynamic(GetPropNameFromClass<T>(filter.SortBy!), (filter.SortDirection ?? SortDirection.ASC).Equals(SortDirection.ASC, StringComparison.OrdinalIgnoreCase));
 
-            return query.Skip(filter.SkipCount).Take(filter.RowsPerPage ?? int.MaxValue);
+            if(filter.Page.HasValue && filter.Page.HasValue)
+                query = query.Skip(filter.SkipCount).Take(filter.RowsPerPage ?? int.MaxValue);
+
+            return query;
         }
 
         public static IQueryable<T> OrderByDynamic<T>(this IQueryable<T> query, string sortValue) /*where T : class*/
