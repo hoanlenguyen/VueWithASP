@@ -103,12 +103,17 @@ namespace webapi.Services
                 return Results.Ok(model);
             });
 
-            //app.MapGet("/products", [AllowAnonymous] async ([FromServices] ApplicationDbContext db, [FromUri] int[] ids) =>
-            //{
-            //    //var products = db.Products.Where(p => p.ProductTags.Any(pt => pt.TagId == id)).ProjectToType<ProductDTO>();
-
-            //    return Results.Ok(ids);
-            //});
+            app.MapDelete("products/{id:int}", [AllowAnonymous] async Task<IResult> ([FromServices] ApplicationDbContext db, int id) =>
+            {
+                var product = await db.Products.FirstOrDefaultAsync(p => p.Id == id);
+                if (product == null)
+                {
+                    return Results.NotFound();
+                }
+                db.Products.Remove(product!);
+                await db.SaveChangesAsync();
+                return Results.Ok();
+            });
         }
     }
 }
