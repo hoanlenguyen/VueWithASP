@@ -21,6 +21,6 @@ namespace webapi.Model.Product
         public int? BrandId { get; set; }
         public string? BrandName { get; set; }
 
-        public virtual IList<LookupModel> Tags { get; set; } = new List<LookupModel>();
+        public virtual IEnumerable<LookupModel> Tags { get; set; } = Enumerable.Empty<LookupModel>();
     }
 }

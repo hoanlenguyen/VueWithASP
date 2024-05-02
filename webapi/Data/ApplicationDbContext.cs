@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
+using System.Reflection.Metadata;
 using webapi.Model.Identity;
 using webapi.Model.Product;
 
@@ -74,10 +75,27 @@ namespace webapi.Data
                    .HasForeignKey(p => p.BrandId)
                    .OnDelete(DeleteBehavior.SetNull);
 
+            //modelBuilder.Entity<Product>()
+            //            .HasMany(e => e.Tags)
+            //            .WithMany(e => e.Products)
+            //            .UsingEntity<ProductTag>(
+            //                p => p.HasOne<Tag>().WithMany().HasForeignKey(t => t.TagId).OnDelete(DeleteBehavior.Cascade),
+            //                t => t.HasOne<Product>().WithMany().HasForeignKey(p => p.ProductId).OnDelete(DeleteBehavior.Cascade)
+            //            );
+
             modelBuilder.Entity<Product>()
-                        .HasMany(e => e.Tags)
-                        .WithMany(e => e.Products)
-                        .UsingEntity<ProductTag>();
+                        .HasMany(e => e.ProductTags)
+                        .WithOne(e => e.Product)
+                        .HasForeignKey(e => e.ProductId)
+                        .OnDelete(DeleteBehavior.Cascade);
+
+            modelBuilder.Entity<Tag>()
+                        .HasMany(e => e.ProductTags)
+                        .WithOne(e => e.Tag)
+                        .HasForeignKey(e => e.TagId)
+                        .OnDelete(DeleteBehavior.Cascade);
+
+            modelBuilder.Entity<ProductTag>().HasKey(x => new { x.ProductId, x.TagId });
         }
     }
 }

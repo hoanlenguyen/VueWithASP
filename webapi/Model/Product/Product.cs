@@ -1,4 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using System.Collections.ObjectModel;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using webapi.Enum;
@@ -35,7 +36,8 @@ namespace webapi.Model.Product
         [ForeignKey(nameof(BrandId))]
         public virtual Brand? Brand { get; set; }
 
-        public virtual ICollection<Tag> Tags { get; set; } = new HashSet<Tag>();
-        public virtual ICollection<ProductTag> ProductTags { get; set; } = new HashSet<ProductTag>();
+
+        public virtual ICollection<ProductTag> ProductTags { get; set; } = [];
+
     }
 }

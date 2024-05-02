@@ -43,7 +43,7 @@ namespace webapi.Data
                     new ProductCategory { Name = "KITCHEN FURNITURE", Description = "Description of ...."},
                 };
                 await dbContext.AddRangeAsync(categories);
-                dbContext.SaveChanges();
+                await dbContext.SaveChangesAsync();
             }
             else
             {
@@ -59,7 +59,7 @@ namespace webapi.Data
                     new Brand { Name = "Gucci", Description = "Description of Brand...."},
                 };
                 await dbContext.AddRangeAsync(brands);
-                dbContext.SaveChanges();
+                await dbContext.SaveChangesAsync();
             }
             else
             {
@@ -76,11 +76,11 @@ namespace webapi.Data
                     new Tag { Name = "WINTER"},
                 };
                 await dbContext.AddRangeAsync(tags);
-                dbContext.SaveChanges();
+                await dbContext.SaveChangesAsync();
             }
             else
             {
-                tags = await dbContext.Tags.ToListAsync();
+                tags = await dbContext.Tags/*.AsNoTracking()*/.ToListAsync();
             }
 
             if (!(await dbContext.Products.AnyAsync()))
@@ -105,7 +105,7 @@ namespace webapi.Data
                     });
                 }
                 await dbContext.AddRangeAsync(products);
-                dbContext.SaveChanges();
+                await dbContext.SaveChangesAsync();
             }
 
             Console.WriteLine("Initialized DB completely.....");

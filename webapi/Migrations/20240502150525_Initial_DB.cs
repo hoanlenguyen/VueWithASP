@@ -6,7 +6,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace webapi.Migrations
 {
     /// <inheritdoc />
-    public partial class Init_DB : Migration
+    public partial class Initial_DB : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -266,14 +266,12 @@ namespace webapi.Migrations
                 name: "ProductTags",
                 columns: table => new
                 {
-                    Id = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
                     TagId = table.Column<int>(type: "int", nullable: false),
                     ProductId = table.Column<int>(type: "int", nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_ProductTags", x => x.Id);
+                    table.PrimaryKey("PK_ProductTags", x => new { x.ProductId, x.TagId });
                     table.ForeignKey(
                         name: "FK_ProductTags_Products_ProductId",
                         column: x => x.ProductId,
@@ -297,11 +295,6 @@ namespace webapi.Migrations
                 name: "IX_Products_CategoryId",
                 table: "Products",
                 column: "CategoryId");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_ProductTags_ProductId",
-                table: "ProductTags",
-                column: "ProductId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_ProductTags_TagId",

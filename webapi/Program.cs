@@ -8,8 +8,12 @@ using webapi.Services;
 var builder = WebApplication.CreateBuilder(args);
 
 //add db context
-var connectionString = "Data Source=localsql;Initial Catalog=DemoDB;Integrated Security=True;MultipleActiveResultSets=True;TrustServerCertificate=True";
-builder.Services.AddDbContext<ApplicationDbContext>(options => options.UseSqlServer(connectionString));
+var connectionString = builder.Configuration.GetConnectionString("MyDatabase");
+builder.Services.AddDbContext<ApplicationDbContext>(options => 
+{
+    options.UseSqlServer(connectionString);
+    //options.UseQueryTrackingBehavior(QueryTrackingBehavior.NoTracking);
+});
 
 //add identity
 builder.Services.AddIdentity<User, Role>()

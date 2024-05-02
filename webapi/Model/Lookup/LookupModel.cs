@@ -4,13 +4,13 @@
     {
         public int Id { get; set; }
         public string Name { get; set; }
-        public IEnumerable<string> Keys { get; set; }
+        //public IEnumerable<string> Keys { get; set; }
     }
 
     public class LookupModel : ILookupModel
     {
         public int Id { get; set; }
         public string Name { get; set; }
-        public IEnumerable<string> Keys { get; set; } = new HashSet<string>();
+        //public IEnumerable<string> Keys { get; set; } = Enumerable.Empty<string>();
     }
 }

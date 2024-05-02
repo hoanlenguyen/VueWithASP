@@ -10,6 +10,7 @@ namespace webapi.Model.Product
         [MaxLength(LimitLength.ShortName)]
         public string Name { get; set; } = string.Empty;
 
-        public virtual ICollection<Product> Products { get; set; } = new HashSet<Product>();
+        public virtual ICollection<ProductTag> ProductTags { get; set; } = [];
+
     }
 }

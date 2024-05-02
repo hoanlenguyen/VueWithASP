@@ -12,8 +12,8 @@ using webapi.Data;
 namespace webapi.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20240401154415_Init_DB")]
-    partial class Init_DB
+    [Migration("20240502150525_Initial_DB")]
+    partial class Initial_DB
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -277,7 +277,7 @@ namespace webapi.Migrations
                     b.ToTable("UserTokens", (string)null);
                 });
 
-            modelBuilder.Entity("webapi.Model.Production.Brand", b =>
+            modelBuilder.Entity("webapi.Model.Product.Brand", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -318,7 +318,7 @@ namespace webapi.Migrations
                     b.ToTable("Brands");
                 });
 
-            modelBuilder.Entity("webapi.Model.Production.Product", b =>
+            modelBuilder.Entity("webapi.Model.Product.Product", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -382,7 +382,7 @@ namespace webapi.Migrations
                     b.ToTable("Products");
                 });
 
-            modelBuilder.Entity("webapi.Model.Production.ProductCategory", b =>
+            modelBuilder.Entity("webapi.Model.Product.ProductCategory", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -423,30 +423,22 @@ namespace webapi.Migrations
                     b.ToTable("ProductCategories");
                 });
 
-            modelBuilder.Entity("webapi.Model.Production.ProductTag", b =>
+            modelBuilder.Entity("webapi.Model.Product.ProductTag", b =>
                 {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
-
                     b.Property<int>("ProductId")
                         .HasColumnType("int");
 
                     b.Property<int>("TagId")
                         .HasColumnType("int");
 
-                    b.HasKey("Id");
-
-                    b.HasIndex("ProductId");
+                    b.HasKey("ProductId", "TagId");
 
                     b.HasIndex("TagId");
 
                     b.ToTable("ProductTags");
                 });
 
-            modelBuilder.Entity("webapi.Model.Production.Tag", b =>
+            modelBuilder.Entity("webapi.Model.Product.Tag", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -521,14 +513,14 @@ namespace webapi.Migrations
                         .IsRequired();
                 });
 
-            modelBuilder.Entity("webapi.Model.Production.Product", b =>
+            modelBuilder.Entity("webapi.Model.Product.Product", b =>
                 {
-                    b.HasOne("webapi.Model.Production.Brand", "Brand")
+                    b.HasOne("webapi.Model.Product.Brand", "Brand")
                         .WithMany("Products")
                         .HasForeignKey("BrandId")
                         .OnDelete(DeleteBehavior.SetNull);
 
-                    b.HasOne("webapi.Model.Production.ProductCategory", "Category")
+                    b.HasOne("webapi.Model.Product.ProductCategory", "Category")
                         .WithMany("Products")
                         .HasForeignKey("CategoryId")
                         .OnDelete(DeleteBehavior.SetNull);
@@ -538,16 +530,16 @@ namespace webapi.Migrations
                     b.Navigation("Category");
                 });
 
-            modelBuilder.Entity("webapi.Model.Production.ProductTag", b =>
+            modelBuilder.Entity("webapi.Model.Product.ProductTag", b =>
                 {
-                    b.HasOne("webapi.Model.Production.Product", "Product")
+                    b.HasOne("webapi.Model.Product.Product", "Product")
                         .WithMany("ProductTags")
                         .HasForeignKey("ProductId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("webapi.Model.Production.Tag", "Tag")
-                        .WithMany()
+                    b.HasOne("webapi.Model.Product.Tag", "Tag")
+                        .WithMany("ProductTags")
                         .HasForeignKey("TagId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
@@ -569,19 +561,24 @@ namespace webapi.Migrations
                     b.Navigation("UserRoles");
                 });
 
-            modelBuilder.Entity("webapi.Model.Production.Brand", b =>
+            modelBuilder.Entity("webapi.Model.Product.Brand", b =>
                 {
                     b.Navigation("Products");
                 });
 
-            modelBuilder.Entity("webapi.Model.Production.Product", b =>
+            modelBuilder.Entity("webapi.Model.Product.Product", b =>
                 {
                     b.Navigation("ProductTags");
                 });
 
-            modelBuilder.Entity("webapi.Model.Production.ProductCategory", b =>
+            modelBuilder.Entity("webapi.Model.Product.ProductCategory", b =>
                 {
                     b.Navigation("Products");
+                });
+
+            modelBuilder.Entity("webapi.Model.Product.Tag", b =>
+                {
+                    b.Navigation("ProductTags");
                 });
 #pragma warning restore 612, 618
         }

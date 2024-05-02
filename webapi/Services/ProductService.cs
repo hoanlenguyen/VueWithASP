@@ -2,7 +2,6 @@
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.IdentityModel.Tokens;
 using webapi.Data;
 using webapi.Helper;
 using webapi.Model.Product;
@@ -48,7 +47,7 @@ namespace webapi.Services
                                 .ThenInclude(pt => pt.Tag)
                                 .FirstOrDefaultAsync(p => p.Id == id);
                 return product != null ? Results.Ok(product.Adapt<ProductDTO>()) : Results.NotFound();
-            }); 
+            });
 
             app.MapGet("category/{id:int}/products", [AllowAnonymous] async ([FromServices] ApplicationDbContext db, int id) =>
             {
@@ -66,9 +65,42 @@ namespace webapi.Services
 
             app.MapGet("tag/{id:int}/products", [AllowAnonymous] async ([FromServices] ApplicationDbContext db, int id) =>
             {
-                var products = db.Products.Where(p => p.ProductTags.Any(pt =>pt.TagId== id)).ProjectToType<ProductDTO>();
+                var products = db.Products.Where(p => p.ProductTags.Any(pt => pt.TagId == id)).ProjectToType<ProductDTO>();
 
                 return Results.Ok(products);
+            });
+
+
+            app.MapPut("products", [AllowAnonymous] async Task<IResult> ([FromServices] ApplicationDbContext db, [FromBody] ProductDTO model) =>
+            {
+                var productEntity = await db.Products
+                                .Include(p => p.ProductTags)
+                                .FirstOrDefaultAsync(p => p.Id == model.Id);
+
+                if (productEntity is null)
+                {
+                    return Results.NotFound();
+                }
+
+                productEntity.ProductTags.Clear();
+                model.Adapt(productEntity);
+                await db.SaveChangesAsync();
+                return Results.Ok();
+            });
+
+            app.MapPost("products", [AllowAnonymous] async Task<IResult> ([FromServices] ApplicationDbContext db, [FromBody] ProductDTO model) =>
+            {
+                model.Id = default;
+                var isExisted = await db.Products.AnyAsync(p => p.Name == model.Name &&  p.Id != model.Id);
+                if (isExisted)
+                {
+                    throw new Exception($"{model.Name} existed");
+                }
+                var productEntity = model.Adapt<Product>();
+                await db.Products.AddAsync(productEntity);
+                await db.SaveChangesAsync();
+                model.Id = productEntity.Id;
+                return Results.Ok(model);
             });
 
             //app.MapGet("/products", [AllowAnonymous] async ([FromServices] ApplicationDbContext db, [FromUri] int[] ids) =>
