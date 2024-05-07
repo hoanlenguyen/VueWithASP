@@ -1,8 +1,12 @@
+using Microsoft.AspNetCore.Http.Json;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
+using System.Text.Json.Serialization;
 using webapi.Data;
 using webapi.Mapper;
 using webapi.Model.Identity;
+using webapi.Model.Permission;
+using webapi.Model.UserDto;
 using webapi.Services;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -42,12 +46,12 @@ builder.Services.AddCors(options =>
 //builder.Services.AddSignalR().AddHubOptions<HubClient>(options => options.EnableDetailedErrors = true);
 
 // Set the JSON serializer options
-//builder.Services.Configure<JsonOptions>(options =>
-//{
-//    options.SerializerOptions.ReferenceHandler = ReferenceHandler.IgnoreCycles;
-//});
+builder.Services.Configure<JsonOptions>(options =>
+{
+    options.SerializerOptions.ReferenceHandler = ReferenceHandler.IgnoreCycles;
+});
 
-//// Add JWT configuration
+// Add JWT configuration
 //builder.Services
 //    .AddAuthentication(option =>
 //    {
@@ -61,8 +65,7 @@ builder.Services.AddCors(options =>
 //        {
 //            ValidIssuer = builder.Configuration["Jwt:Issuer"],
 //            ValidAudience = builder.Configuration["Jwt:Audience"],
-//            IssuerSigningKey = new SymmetricSecurityKey
-//                (Encoding.UTF8.GetBytes(builder.Configuration["Jwt:Key"])),
+//            IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(builder.Configuration["Jwt:Key"])),
 //            ValidateIssuer = true,
 //            ValidateAudience = true,
 //            ValidateLifetime = true,
@@ -70,6 +73,9 @@ builder.Services.AddCors(options =>
 //            ClockSkew = TimeSpan.Zero
 //        };
 //    });
+
+//add claims- permissions
+builder.Services.AddAuthorization(options => options.AddCustomizedAuthorizationOptions());
 
 // add Swagger & JWT authen to Swagger
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
@@ -115,7 +121,7 @@ builder.Services.AddMemoryCache();
 //builder.Services.AddSingleton<IMemoryCacheService>(provider => new MemoryCacheService(provider.GetService<IMemoryCache>(), mySQLConnection.ConnectionString));
 
 //builder.Services.AddHttpContextAccessor();
-//builder.Services.AddTransient<IUserPrincipal>(provider => new UserPrincipal(provider.GetService<IHttpContextAccessor>().HttpContext.User));
+builder.Services.AddTransient<IUserPrincipal>(provider => new UserPrincipal(provider.GetService<IHttpContextAccessor>().HttpContext.User));
 
 //add extra mapp config
 //MapperConfig.AddMapperConfigs();
@@ -150,7 +156,8 @@ if (app.Environment.IsDevelopment())
     {
         var dbInitializer = scope.ServiceProvider.GetRequiredService<ApplicationDbContext>();
         var userManager = scope.ServiceProvider.GetRequiredService<UserManager<User>>();
-        await DbInitializer.Initialize(dbInitializer, userManager);
+        var roleManager = scope.ServiceProvider.GetRequiredService<RoleManager<Role>>();
+        await DbInitializer.Initialize(dbInitializer, userManager, roleManager);
     }
 }
 

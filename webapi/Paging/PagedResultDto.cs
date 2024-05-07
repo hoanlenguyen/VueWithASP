@@ -6,14 +6,14 @@
         {
         }
 
-        public BasePaging(int totalItems, IReadOnlyList<T> items)
+        public BasePaging(int totalItems, IEnumerable<T> items)
         {
             TotalItems = totalItems;
             Items = items;
         }
 
         public int TotalItems { get; set; }
-        public IReadOnlyList<T> Items { get; set; }
+        public IEnumerable<T> Items { get; set; }
     }
 
     public class PagedResultDto<T> : BasePaging<T> where T : class
@@ -22,7 +22,7 @@
         {
         }
 
-        public PagedResultDto(int totalItems, IReadOnlyList<T> items) : base(totalItems, items)
+        public PagedResultDto(int totalItems, IEnumerable<T> items) : base(totalItems, items)
         {
         }
     }

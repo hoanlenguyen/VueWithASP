@@ -1,6 +1,5 @@
 ﻿using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
-using System.Reflection.Metadata;
 using webapi.Model.Identity;
 using webapi.Model.Product;
 
@@ -61,7 +60,8 @@ namespace webapi.Data
             modelBuilder.Entity<RoleClaim>()
                    .HasOne(p => p.Role)
                    .WithMany(b => b.RoleClaims)
-                   .HasForeignKey(p => p.RoleId);
+                   .HasForeignKey(p => p.RoleId)
+                   .OnDelete(DeleteBehavior.Cascade);
 
             modelBuilder.Entity<Product>()
                    .HasOne(p => p.Category)

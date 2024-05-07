@@ -2,13 +2,14 @@
 using Microsoft.EntityFrameworkCore;
 using webapi.Enum;
 using webapi.Model.Identity;
+using webapi.Model.Permission;
 using webapi.Model.Product;
 
 namespace webapi.Data
 {
     public static class DbInitializer
     {
-        internal static async Task Initialize(ApplicationDbContext dbContext, UserManager<User> userManager)
+        internal static async Task Initialize(ApplicationDbContext dbContext, UserManager<User> userManager, RoleManager<Role> roleManager)
         {
             ArgumentNullException.ThrowIfNull(dbContext, nameof(dbContext));
             ArgumentNullException.ThrowIfNull(userManager, nameof(userManager));
@@ -19,6 +20,23 @@ namespace webapi.Data
             List<ProductCategory> categories;
             List<Brand> brands;
             List<Tag> tags;
+            Role role;
+
+            if (!(await roleManager.Roles.AnyAsync()))
+            {
+                role = new Role
+                {
+                    Name = BaseRoles.Admin,
+                    RoleClaims = Permissions.GetAllPermissions()
+                                            .Select(p => new RoleClaim { ClaimType = Permissions.Type, ClaimValue = p })
+                                            .ToList()
+                };
+                await roleManager.CreateAsync(role);
+            }
+            else 
+            {
+                role = await roleManager.FindByNameAsync(BaseRoles.Admin);
+            }
 
             if (!(await dbContext.Users.AnyAsync()))
             {
@@ -26,10 +44,16 @@ namespace webapi.Data
                 {
                     UserName = "admin",
                     Name = "ADMIN",
-                    Email = "admin@gmai.com",
+                    Email = "admin@gmail.com",
                     UserType = UserType.SuperAdmin
                 };
-                var result = await userManager.CreateAsync(user, "123qwe!@#QWE");
+
+                if (role != null)
+                {
+                    user.UserRoles = new List<UserRole> { new UserRole { RoleId = role.Id } };
+                }
+
+                var result = await userManager.CreateAsync(user, "123qwe!@#QWE");                 
             }
 
             if (!(await dbContext.ProductCategories.AnyAsync()))
@@ -80,7 +104,7 @@ namespace webapi.Data
             }
             else
             {
-                tags = await dbContext.Tags/*.AsNoTracking()*/.ToListAsync();
+                tags = await dbContext.Tags.AsNoTracking().ToListAsync();
             }
 
             if (!(await dbContext.Products.AnyAsync()))

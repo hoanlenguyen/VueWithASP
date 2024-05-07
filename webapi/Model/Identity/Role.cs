@@ -23,7 +23,7 @@ namespace webapi.Model.Identity
         public bool IsDeleted { get; set; } = false;
         public bool IsActive { get; set; } = true;
 
-        public virtual ICollection<UserRole> UserRoles { get; set; } = new HashSet<UserRole>();
-        public virtual ICollection<RoleClaim> RoleClaims { get; set; } = new HashSet<RoleClaim>();
+        public virtual IList<UserRole> UserRoles { get; set; } = new List<UserRole>();
+        public virtual IList<RoleClaim> RoleClaims { get; set; } = new List<RoleClaim>();
     }
 }

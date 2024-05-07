@@ -12,8 +12,8 @@ using webapi.Data;
 namespace webapi.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20240502150525_Initial_DB")]
-    partial class Initial_DB
+    [Migration("20240506180016_Init_DB")]
+    partial class Init_DB
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
