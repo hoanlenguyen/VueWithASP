@@ -3,8 +3,8 @@
     public enum UserType
     {
         EndUser = 0,
-        Admin = 10,
-        Manager= 20,
-        SuperAdmin = 100
-    } 
+        Manager = 1,
+        Admin = 2,
+        SuperAdmin = 3
+    }
 }

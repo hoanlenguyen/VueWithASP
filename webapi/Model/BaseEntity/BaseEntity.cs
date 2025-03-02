@@ -1,23 +1,12 @@
-﻿namespace webapi.Model.BaseEntity
+﻿namespace webapi.Model.BaseEntities
 {
-    public interface IAuditEntity
+    public interface IBaseEntity
     {
-        public int Id { get; set; }
-        public DateTime CreationTime { get; set; }
-        public int? CreatorUserId { get; set; }
-        public DateTime? LastModificationTime { get; set; }
-        public int? LastModifierUserId { get; set; }
-        public bool IsActive { get; set; }
-        public bool IsDeleted { get; set; }
+        int Id { get; set; }
     }
 
-    public abstract class BaseAuditEntity : Entity, IAuditEntity
+    public abstract class BaseEntity : IBaseEntity
     {
-        public DateTime CreationTime { get; set; } = DateTime.UtcNow.AddHours(1);
-        public int? CreatorUserId { get; set; }
-        public DateTime? LastModificationTime { get; set; }
-        public int? LastModifierUserId { get; set; }
-        public bool IsActive { get; set; } = true;
-        public bool IsDeleted { get; set; } = false;
+        public int Id { get; set; }
     }
 }

@@ -1,6 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations;
 using webapi.Enum;
-using webapi.Model.BaseEntity;
+using webapi.Model.BaseEntities;
 
 namespace webapi.Model.Product
 {

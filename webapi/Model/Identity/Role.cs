@@ -1,6 +1,6 @@
 ﻿using Microsoft.AspNetCore.Identity;
 using System.ComponentModel.DataAnnotations;
-using webapi.Model.BaseEntity;
+using webapi.Model.BaseEntities;
 
 namespace webapi.Model.Identity
 {

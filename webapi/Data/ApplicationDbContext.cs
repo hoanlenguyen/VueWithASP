@@ -39,13 +39,13 @@ namespace webapi.Data
         {
             base.OnModelCreating(modelBuilder);
 
-            modelBuilder.Entity<User>().ToTable("Users");
-            modelBuilder.Entity<Role>().ToTable("Roles");
-            modelBuilder.Entity<UserRole>().ToTable("UserRoles");
-            modelBuilder.Entity<RoleClaim>().ToTable("RoleClaims");
-            modelBuilder.Entity<UserClaim>().ToTable("UserClaims");
-            modelBuilder.Entity<UserLogin>().ToTable("UserLogins");
-            modelBuilder.Entity<UserToken>().ToTable("UserTokens");
+            modelBuilder.Entity<User>().ToTable("Users", "Identity");
+            modelBuilder.Entity<Role>().ToTable("Roles", "Identity");
+            modelBuilder.Entity<UserRole>().ToTable("UserRoles", "Identity");
+            modelBuilder.Entity<RoleClaim>().ToTable("RoleClaims", "Identity");
+            modelBuilder.Entity<UserClaim>().ToTable("UserClaims", "Identity");
+            modelBuilder.Entity<UserLogin>().ToTable("UserLogins", "Identity");
+            modelBuilder.Entity<UserToken>().ToTable("UserTokens", "Identity");
 
             modelBuilder.Entity<UserRole>()
                     .HasOne(p => p.User)
@@ -75,14 +75,6 @@ namespace webapi.Data
                    .HasForeignKey(p => p.BrandId)
                    .OnDelete(DeleteBehavior.SetNull);
 
-            //modelBuilder.Entity<Product>()
-            //            .HasMany(e => e.Tags)
-            //            .WithMany(e => e.Products)
-            //            .UsingEntity<ProductTag>(
-            //                p => p.HasOne<Tag>().WithMany().HasForeignKey(t => t.TagId).OnDelete(DeleteBehavior.Cascade),
-            //                t => t.HasOne<Product>().WithMany().HasForeignKey(p => p.ProductId).OnDelete(DeleteBehavior.Cascade)
-            //            );
-
             modelBuilder.Entity<Product>()
                         .HasMany(e => e.ProductTags)
                         .WithOne(e => e.Product)
@@ -96,6 +88,33 @@ namespace webapi.Data
                         .OnDelete(DeleteBehavior.Cascade);
 
             modelBuilder.Entity<ProductTag>().HasKey(x => new { x.ProductId, x.TagId });
+        }
+
+        private void BuildIdentityModel(this ModelBuilder modelBuilder)
+        {
+            modelBuilder.Entity<User>().ToTable("Users", "Identity");
+            modelBuilder.Entity<Role>().ToTable("Roles", "Identity");
+            modelBuilder.Entity<UserRole>().ToTable("UserRoles", "Identity");
+            modelBuilder.Entity<RoleClaim>().ToTable("RoleClaims", "Identity");
+            modelBuilder.Entity<UserClaim>().ToTable("UserClaims", "Identity");
+            modelBuilder.Entity<UserLogin>().ToTable("UserLogins", "Identity");
+            modelBuilder.Entity<UserToken>().ToTable("UserTokens", "Identity");
+
+            modelBuilder.Entity<UserRole>()
+                    .HasOne(p => p.User)
+                    .WithMany(p => p.UserRoles)
+                    .HasForeignKey(p => p.UserId);
+
+            modelBuilder.Entity<UserRole>()
+                    .HasOne(p => p.Role)
+                    .WithMany(p => p.UserRoles)
+                    .HasForeignKey(p => p.RoleId);
+
+            modelBuilder.Entity<RoleClaim>()
+                   .HasOne(p => p.Role)
+                   .WithMany(b => b.RoleClaims)
+                   .HasForeignKey(p => p.RoleId)
+                   .OnDelete(DeleteBehavior.Cascade);
         }
     }
 }

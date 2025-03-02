@@ -3,7 +3,7 @@ using System.Collections.ObjectModel;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using webapi.Enum;
-using webapi.Model.BaseEntity;
+using webapi.Model.BaseEntities;
 
 namespace webapi.Model.Product
 {
