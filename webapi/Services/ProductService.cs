@@ -30,12 +30,19 @@ namespace webapi.Services
 
                 var totalCount = await query.CountAsync();
 
-                 
-                var items = totalCount > 0 ? 
+
+                var items = totalCount > 0 ?
                                 await query.OrderAndPaging(request).ProjectToType<ProductDTO>().ToListAsync() :
                                 new List<ProductDTO>();
 
                 return Results.Ok(new PagedResultDto<ProductDTO>(totalCount, items));
+            });
+
+            app.MapGet("userdetail", [AllowAnonymous] async ([FromServices] ApplicationDbContext db) =>
+            {
+                var query = await db.UserDetails.FirstOrDefaultAsync();
+
+                return Results.Ok(query);
             });
 
             app.MapGet("products/{id:int}", [AllowAnonymous] async Task<IResult> ([FromServices] ApplicationDbContext db, int id) =>
@@ -91,7 +98,7 @@ namespace webapi.Services
             app.MapPost("products", [AllowAnonymous] async Task<IResult> ([FromServices] ApplicationDbContext db, [FromBody] ProductDTO model) =>
             {
                 model.Id = default;
-                var isExisted = await db.Products.AnyAsync(p => p.Name == model.Name &&  p.Id != model.Id);
+                var isExisted = await db.Products.AnyAsync(p => p.Name == model.Name && p.Id != model.Id);
                 if (isExisted)
                 {
                     throw new Exception($"{model.Name} existed");

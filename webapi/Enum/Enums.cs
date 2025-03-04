@@ -2,9 +2,10 @@
 {
     public enum UserType
     {
-        EndUser = 0,
-        Manager = 1,
-        Admin = 2,
-        SuperAdmin = 3
+        None = 0,
+        EndUser = 1,
+        Manager = 2,
+        Moderator = 3,
+        Admin = 4
     }
 }

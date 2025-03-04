@@ -33,7 +33,7 @@ namespace webapi.Data
                 };
                 await roleManager.CreateAsync(role);
             }
-            else 
+            else
             {
                 role = await roleManager.FindByNameAsync(BaseRoles.Admin);
             }
@@ -43,17 +43,22 @@ namespace webapi.Data
                 var user = new User
                 {
                     UserName = "admin",
-                    Name = "ADMIN",
                     Email = "admin@gmail.com",
-                    UserType = UserType.SuperAdmin
+                    UserType = UserType.Admin,
+                    UserDetail = new UserDetail
+                    {
+                        FirstName = "Admin",
+                        LastName = "LastName",
+                        DisplayName = "admin LastName",
+                        DateOfBirth = new DateTime(1990, 1, 1)
+                    }
                 };
 
                 if (role != null)
                 {
                     user.UserRoles = new List<UserRole> { new UserRole { RoleId = role.Id } };
                 }
-
-                var result = await userManager.CreateAsync(user, "123qwe!@#QWE");                 
+                var result = await userManager.CreateAsync(user, "123qwe!@#QWE");
             }
 
             if (!(await dbContext.ProductCategories.AnyAsync()))

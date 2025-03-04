@@ -6,9 +6,6 @@ namespace webapi.Model.Identity
 {
     public class Role : IdentityRole<int>, IAuditEntity
     {
-        public DateTime CreationTime { get; set; } = DateTime.UtcNow.AddHours(1);
-        public int? CreatorUserId { get; set; }
-
         [MaxLength(100)]
         public override string Name { get; set; }
 
@@ -18,10 +15,9 @@ namespace webapi.Model.Identity
         [MaxLength(50)]
         public override string ConcurrencyStamp { get; set; } = Guid.NewGuid().ToString();
 
-        public DateTime? LastModificationTime { get; set; }
-        public int? LastModifierUserId { get; set; }
-        public bool IsDeleted { get; set; } = false;
-        public bool IsActive { get; set; } = true;
+        public virtual string? ChangedByUser { set; get; }
+
+        public byte[] RowVersion { set; get; } = new byte[0];
 
         public virtual IList<UserRole> UserRoles { get; set; } = new List<UserRole>();
         public virtual IList<RoleClaim> RoleClaims { get; set; } = new List<RoleClaim>();

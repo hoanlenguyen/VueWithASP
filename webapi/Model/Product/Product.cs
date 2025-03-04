@@ -1,5 +1,4 @@
 ﻿using Microsoft.EntityFrameworkCore;
-using System.Collections.ObjectModel;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using webapi.Enum;
@@ -7,7 +6,7 @@ using webapi.Model.BaseEntities;
 
 namespace webapi.Model.Product
 {
-    public class Product : BaseAuditEntity
+    public class Product : BaseAuditEntity, IAuditEntity
     {
         [Required]
         [MaxLength(LimitLength.FullName)]

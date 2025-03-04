@@ -77,8 +77,8 @@ namespace webapi.Services
                     var claims = new List<Claim>
                     {
                         new Claim(ClaimTypes.NameIdentifier, user.Id.ToString()),
-                        new Claim(ClaimTypes.Email, user.Email??user.UserName??string.Empty),
-                        new Claim(ClaimTypes.Name, user.Name),
+                        new Claim(ClaimTypes.Email, user.Email ?? user.UserName ?? string.Empty),
+                        new Claim(ClaimTypes.Name, user.UserDetail?.DisplayName ?? string.Empty),
                         new Claim(ClaimTypes.Role, roleName??string.Empty),
                     };
 
@@ -95,7 +95,7 @@ namespace webapi.Services
                     {
                         accessToken,
                         user.Email,
-                        user.Name,
+                        name = user.UserDetail?.DisplayName ?? string.Empty,
                         roleName,
                         permissions
                     });
@@ -133,7 +133,7 @@ namespace webapi.Services
 
                 return Results.Ok(new
                 {
-                    Name = user.Name,
+                    Name = user.UserDetail?.DisplayName ?? string.Empty,
                     Email = user.Email
                 });
             });
