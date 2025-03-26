@@ -1,16 +1,15 @@
 ﻿using System.ComponentModel.DataAnnotations;
 using webapi.Enum;
-using webapi.Model.BaseEntity;
+using webapi.Model.BaseEntities;
 
 namespace webapi.Model.Product
 {
-    public class Tag : Entity
+    public class Tag : BaseEntity
     {
         [Required]
         [MaxLength(LimitLength.ShortName)]
         public string Name { get; set; } = string.Empty;
 
         public virtual ICollection<ProductTag> ProductTags { get; set; } = [];
-
     }
 }

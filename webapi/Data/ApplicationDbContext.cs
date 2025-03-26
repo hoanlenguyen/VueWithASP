@@ -1,5 +1,10 @@
 ﻿using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
+using System.Data;
+using System.Data.Common;
+using System.Diagnostics;
+using webapi.Data.Builders;
+using webapi.Model.BaseEntities;
 using webapi.Model.Identity;
 using webapi.Model.Product;
 
@@ -7,10 +12,33 @@ namespace webapi.Data
 {
     public class ApplicationDbContext : IdentityDbContext<User, Role, int, UserClaim, UserRole, UserLogin, RoleClaim, UserToken>
     {
-        public ApplicationDbContext
-           (DbContextOptions<ApplicationDbContext> options)
-            : base(options)
+        private readonly ILoggerFactory? _loggerFactory;
+        private string _contextUser;
+        private readonly int? _contextUserId;
+        public readonly ILogger<IdentityDbContext>? Logger;
+
+        public ApplicationDbContext(
+            DbContextOptions<ApplicationDbContext> options,
+            IHttpContextAccessor httpContextAccessor,
+            ILoggerFactory loggerFactory,
+            ILogger<IdentityDbContext> logger
+            ) : base(options)
         {
+            _loggerFactory = loggerFactory;
+            _contextUser = httpContextAccessor.HttpContext?.User.Identity?.Name ?? "IdentityDbContext";
+            Logger = logger;
+            //if (httpContextAccessor?.HttpContext?.User?.Identity?.GetIdentityUserId(out var userIdentity) ?? false)
+            //{
+            //    _contextUserId = userIdentity;
+            //}
+
+            if (this.Database.IsRelational())
+            {
+                var connection = this.Database.GetDbConnection();
+                connection.StateChange += OnConnectionStateChange;
+            }
+
+            SavingChanges += OnSavingChanges;
         }
 
         #region Identity
@@ -35,86 +63,73 @@ namespace webapi.Data
 
         #endregion Product
 
+        protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
+        {
+            base.OnConfiguring(optionsBuilder);
+#if DEBUG
+            optionsBuilder.LogTo((s) => Debug.WriteLine(s), LogLevel.Debug);
+            optionsBuilder.EnableSensitiveDataLogging().LogTo((s) => Debug.WriteLine(s), LogLevel.Debug);
+#endif
+            if (_loggerFactory != null)
+            {
+                optionsBuilder.UseLoggerFactory(_loggerFactory).EnableDetailedErrors();
+            }
+
+            if (!optionsBuilder.IsConfigured)
+            {
+                optionsBuilder.EnableSensitiveDataLogging(true);
+                optionsBuilder.UseSqlServer("Server=localsql;Database=EduDb;Trusted_Connection=True;", o => o.UseQuerySplittingBehavior(QuerySplittingBehavior.SplitQuery));
+            }
+        }
+
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             base.OnModelCreating(modelBuilder);
 
-            modelBuilder.Entity<User>().ToTable("Users", "Identity");
-            modelBuilder.Entity<Role>().ToTable("Roles", "Identity");
-            modelBuilder.Entity<UserRole>().ToTable("UserRoles", "Identity");
-            modelBuilder.Entity<RoleClaim>().ToTable("RoleClaims", "Identity");
-            modelBuilder.Entity<UserClaim>().ToTable("UserClaims", "Identity");
-            modelBuilder.Entity<UserLogin>().ToTable("UserLogins", "Identity");
-            modelBuilder.Entity<UserToken>().ToTable("UserTokens", "Identity");
+            //modelBuilder.HasChangeTrackingStrategy(ChangeTrackingStrategy.ChangedNotifications);
 
-            modelBuilder.Entity<UserRole>()
-                    .HasOne(p => p.User)
-                    .WithMany(p => p.UserRoles)
-                    .HasForeignKey(p => p.UserId);
+            modelBuilder.HasAnnotation("Relational:Collation", "SQL_Latin1_General_CP1_CI_AS");
 
-            modelBuilder.Entity<UserRole>()
-                    .HasOne(p => p.Role)
-                    .WithMany(p => p.UserRoles)
-                    .HasForeignKey(p => p.RoleId);
+            modelBuilder.BuildIdentityModels();
 
-            modelBuilder.Entity<RoleClaim>()
-                   .HasOne(p => p.Role)
-                   .WithMany(b => b.RoleClaims)
-                   .HasForeignKey(p => p.RoleId)
-                   .OnDelete(DeleteBehavior.Cascade);
-
-            modelBuilder.Entity<Product>()
-                   .HasOne(p => p.Category)
-                   .WithMany(b => b.Products)
-                   .HasForeignKey(p => p.CategoryId)
-                   .OnDelete(DeleteBehavior.SetNull);
-
-            modelBuilder.Entity<Product>()
-                   .HasOne(p => p.Brand)
-                   .WithMany(b => b.Products)
-                   .HasForeignKey(p => p.BrandId)
-                   .OnDelete(DeleteBehavior.SetNull);
-
-            modelBuilder.Entity<Product>()
-                        .HasMany(e => e.ProductTags)
-                        .WithOne(e => e.Product)
-                        .HasForeignKey(e => e.ProductId)
-                        .OnDelete(DeleteBehavior.Cascade);
-
-            modelBuilder.Entity<Tag>()
-                        .HasMany(e => e.ProductTags)
-                        .WithOne(e => e.Tag)
-                        .HasForeignKey(e => e.TagId)
-                        .OnDelete(DeleteBehavior.Cascade);
-
-            modelBuilder.Entity<ProductTag>().HasKey(x => new { x.ProductId, x.TagId });
+            modelBuilder.BuildProductModels();
         }
 
-        private void BuildIdentityModel(this ModelBuilder modelBuilder)
+        private void OnSavingChanges(object? sender, SavingChangesEventArgs? e)
         {
-            modelBuilder.Entity<User>().ToTable("Users", "Identity");
-            modelBuilder.Entity<Role>().ToTable("Roles", "Identity");
-            modelBuilder.Entity<UserRole>().ToTable("UserRoles", "Identity");
-            modelBuilder.Entity<RoleClaim>().ToTable("RoleClaims", "Identity");
-            modelBuilder.Entity<UserClaim>().ToTable("UserClaims", "Identity");
-            modelBuilder.Entity<UserLogin>().ToTable("UserLogins", "Identity");
-            modelBuilder.Entity<UserToken>().ToTable("UserTokens", "Identity");
+            foreach (var entry in ChangeTracker.Entries().ToList())
+            {
+                if (entry.Entity is IAuditEntity auditModel && (entry.State == EntityState.Added || entry.State == EntityState.Modified))
+                {
+                    auditModel.ChangedByUser = _contextUser;
+                }
+            }
+        }
 
-            modelBuilder.Entity<UserRole>()
-                    .HasOne(p => p.User)
-                    .WithMany(p => p.UserRoles)
-                    .HasForeignKey(p => p.UserId);
+        private void OnConnectionStateChange(object sender, StateChangeEventArgs e)
+        {
+            SetContextUser(_contextUser);
+        }
 
-            modelBuilder.Entity<UserRole>()
-                    .HasOne(p => p.Role)
-                    .WithMany(p => p.UserRoles)
-                    .HasForeignKey(p => p.RoleId);
+        private void SetContextUser(string contextUser)
+        {
+            if (_contextUser != contextUser)
+            {
+                if (string.IsNullOrWhiteSpace(contextUser))
+                {
+                    contextUser = "IdentityDbContext";
+                }
+                _contextUser = contextUser;
+            }
 
-            modelBuilder.Entity<RoleClaim>()
-                   .HasOne(p => p.Role)
-                   .WithMany(b => b.RoleClaims)
-                   .HasForeignKey(p => p.RoleId)
-                   .OnDelete(DeleteBehavior.Cascade);
+            var dbConnection = Database.GetDbConnection();
+            if (dbConnection.State == ConnectionState.Open)
+            {
+                using DbCommand cmd = dbConnection.CreateCommand();
+                cmd.CommandType = CommandType.Text;
+                cmd.CommandText = $"exec sp_set_session_context 'ContextUser', N'{_contextUser}'";
+                cmd.ExecuteNonQuery();
+            }
         }
     }
 }
