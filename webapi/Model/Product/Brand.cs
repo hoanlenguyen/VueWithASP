@@ -4,7 +4,7 @@ using webapi.Model.BaseEntities;
 
 namespace webapi.Model.Product
 {
-    public class Brand : BaseAuditEntity
+    public class Brand : BaseAuditEntity, IAuditEntity
     {
         [Required]
         [MaxLength(LimitLength.FullName)]
