@@ -9,7 +9,7 @@ namespace webapi.Data
         {
             modelBuilder.Entity<Product>().ToTemporalTable("Products", "Store");
             modelBuilder.Entity<Brand>().ToTemporalTable("Brands", "Store");
-            modelBuilder.Entity<Tag>().ToTemporalTable("Tags", "Store");
+            modelBuilder.Entity<Tag>().ToTable("Tags", "Store");
             modelBuilder.Entity<ProductCategory>().ToTemporalTable("ProductCategories", "Store");
 
             modelBuilder.Entity<ProductTag>().ToTable("ProductTags", "Store");

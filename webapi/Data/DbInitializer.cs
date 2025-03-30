@@ -9,7 +9,7 @@ namespace webapi.Data
 {
     public static class DbInitializer
     {
-        internal static async Task Initialize(ApplicationDbContext dbContext, UserManager<User> userManager, RoleManager<Role> roleManager)
+        internal static async Task Initialize(IdentityDbContext identityDbContext, StoreDbContext dbContext, UserManager<User> userManager, RoleManager<Role> roleManager)
         {
             ArgumentNullException.ThrowIfNull(dbContext, nameof(dbContext));
             ArgumentNullException.ThrowIfNull(userManager, nameof(userManager));
@@ -38,16 +38,20 @@ namespace webapi.Data
                 role = await roleManager.FindByNameAsync(BaseRoles.Admin);
             }
 
-            if (!(await dbContext.Users.AnyAsync()))
+            if (!(await identityDbContext.Users.AnyAsync()))
             {
                 var user = new User
                 {
                     UserName = "admin",
-                    FirstName = "Firstname",
-                    LastName = "Lastname",
-                    DisplayName = "Admin",
                     Email = "admin@gmail.com",
-                    UserType = UserType.SuperAdmin
+                    UserType = UserType.Admin,
+                    UserDetail = new UserDetail
+                    {
+                        FirstName = "Admin",
+                        LastName = "Admin",
+                        DisplayName = "Admin Admin",
+                        DateOfBirth = new DateTime(1991, 1, 1),
+                    }
                 };
 
                 if (role != null)

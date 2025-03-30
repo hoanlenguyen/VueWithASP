@@ -3,22 +3,20 @@ using Microsoft.EntityFrameworkCore;
 using System.Data;
 using System.Data.Common;
 using System.Diagnostics;
-using webapi.Data.Builders;
 using webapi.Model.BaseEntities;
 using webapi.Model.Identity;
-using webapi.Model.Product;
 
 namespace webapi.Data
 {
-    public class ApplicationDbContext : IdentityDbContext<User, Role, int, UserClaim, UserRole, UserLogin, RoleClaim, UserToken>
+    public class IdentityDbContext : IdentityDbContext<User, Role, int, UserClaim, UserRole, UserLogin, RoleClaim, UserToken>
     {
         private readonly ILoggerFactory? _loggerFactory;
         private string _contextUser;
         private readonly int? _contextUserId;
         public readonly ILogger<IdentityDbContext>? Logger;
 
-        public ApplicationDbContext(
-            DbContextOptions<ApplicationDbContext> options,
+        public IdentityDbContext(
+            DbContextOptions<IdentityDbContext> options,
             IHttpContextAccessor httpContextAccessor,
             ILoggerFactory loggerFactory,
             ILogger<IdentityDbContext> logger
@@ -50,18 +48,9 @@ namespace webapi.Data
         public override DbSet<UserClaim> UserClaims { get; set; }
         public override DbSet<UserLogin> UserLogins { get; set; }
         public override DbSet<UserToken> UserTokens { get; set; }
+        public DbSet<UserDetail> UserDetails { get; set; }
 
         #endregion Identity
-
-        #region Product
-
-        public DbSet<Product> Products { get; set; }
-        public DbSet<ProductCategory> ProductCategories { get; set; }
-        public DbSet<Brand> Brands { get; set; }
-        public DbSet<Tag> Tags { get; set; }
-        public DbSet<ProductTag> ProductTags { get; set; }
-
-        #endregion Product
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
@@ -78,7 +67,7 @@ namespace webapi.Data
             if (!optionsBuilder.IsConfigured)
             {
                 optionsBuilder.EnableSensitiveDataLogging(true);
-                optionsBuilder.UseSqlServer("Server=localsql;Database=EduDb;Trusted_Connection=True;", o => o.UseQuerySplittingBehavior(QuerySplittingBehavior.SplitQuery));
+                optionsBuilder.UseSqlServer("Data Source=localsql;Initial Catalog=DemoDB;Integrated Security=True;MultipleActiveResultSets=True;TrustServerCertificate=True;", o => o.UseQuerySplittingBehavior(QuerySplittingBehavior.SplitQuery));
             }
         }
 
@@ -91,8 +80,6 @@ namespace webapi.Data
             modelBuilder.HasAnnotation("Relational:Collation", "SQL_Latin1_General_CP1_CI_AS");
 
             modelBuilder.BuildIdentityModels();
-
-            modelBuilder.BuildProductModels();
         }
 
         private void OnSavingChanges(object? sender, SavingChangesEventArgs? e)

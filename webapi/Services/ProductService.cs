@@ -13,7 +13,7 @@ namespace webapi.Services
     {
         public static void AddProductService(this WebApplication app)
         {
-            app.MapGet("products", [AllowAnonymous] async ([FromServices] ApplicationDbContext db, [AsParameters] ProductFilter request) =>
+            app.MapGet("products", [AllowAnonymous] async ([FromServices] StoreDbContext db, [AsParameters] ProductFilter request) =>
             {
                 var query = db.Products
                             .Include(p => p.Category)
@@ -38,14 +38,14 @@ namespace webapi.Services
                 return Results.Ok(new PagedResultDto<ProductDTO>(totalCount, items));
             });
 
-            app.MapGet("userdetail", [AllowAnonymous] async ([FromServices] ApplicationDbContext db) =>
+            app.MapGet("userdetail", [AllowAnonymous] async ([FromServices] IdentityDbContext db) =>
             {
                 var query = await db.UserDetails.FirstOrDefaultAsync();
 
                 return Results.Ok(query);
             });
 
-            app.MapGet("products/{id:int}", [AllowAnonymous] async Task<IResult> ([FromServices] ApplicationDbContext db, int id) =>
+            app.MapGet("products/{id:int}", [AllowAnonymous] async Task<IResult> ([FromServices] StoreDbContext db, int id) =>
             {
                 var product = await db.Products
                                 .Include(p => p.Category)
@@ -56,21 +56,21 @@ namespace webapi.Services
                 return product != null ? Results.Ok(product.Adapt<ProductDTO>()) : Results.NotFound();
             });
 
-            app.MapGet("category/{id:int}/products", [AllowAnonymous] async ([FromServices] ApplicationDbContext db, int id) =>
+            app.MapGet("category/{id:int}/products", [AllowAnonymous] async ([FromServices] StoreDbContext db, int id) =>
             {
                 var products = db.Products.Where(p => p.CategoryId == id).ProjectToType<ProductDTO>();
 
                 return Results.Ok(products);
             });
 
-            app.MapGet("brand/{id:int}/products", [AllowAnonymous] async ([FromServices] ApplicationDbContext db, int id) =>
+            app.MapGet("brand/{id:int}/products", [AllowAnonymous] async ([FromServices] StoreDbContext db, int id) =>
             {
                 var products = db.Products.Where(p => p.BrandId == id).ProjectToType<ProductDTO>();
 
                 return Results.Ok(products);
             });
 
-            app.MapGet("tag/{id:int}/products", [AllowAnonymous] async ([FromServices] ApplicationDbContext db, int id) =>
+            app.MapGet("tag/{id:int}/products", [AllowAnonymous] async ([FromServices] StoreDbContext db, int id) =>
             {
                 var products = db.Products.Where(p => p.ProductTags.Any(pt => pt.TagId == id)).ProjectToType<ProductDTO>();
 
@@ -78,7 +78,7 @@ namespace webapi.Services
             });
 
 
-            app.MapPut("products", [AllowAnonymous] async Task<IResult> ([FromServices] ApplicationDbContext db, [FromBody] ProductDTO model) =>
+            app.MapPut("products", [AllowAnonymous] async Task<IResult> ([FromServices] StoreDbContext db, [FromBody] ProductDTO model) =>
             {
                 var productEntity = await db.Products
                                 .Include(p => p.ProductTags)
@@ -95,7 +95,7 @@ namespace webapi.Services
                 return Results.Ok();
             });
 
-            app.MapPost("products", [AllowAnonymous] async Task<IResult> ([FromServices] ApplicationDbContext db, [FromBody] ProductDTO model) =>
+            app.MapPost("products", [AllowAnonymous] async Task<IResult> ([FromServices] StoreDbContext db, [FromBody] ProductDTO model) =>
             {
                 model.Id = default;
                 var isExisted = await db.Products.AnyAsync(p => p.Name == model.Name && p.Id != model.Id);
@@ -110,7 +110,7 @@ namespace webapi.Services
                 return Results.Ok(model);
             });
 
-            app.MapDelete("products/{id:int}", [AllowAnonymous] async Task<IResult> ([FromServices] ApplicationDbContext db, int id) =>
+            app.MapDelete("products/{id:int}", [AllowAnonymous] async Task<IResult> ([FromServices] StoreDbContext db, int id) =>
             {
                 var product = await db.Products.FirstOrDefaultAsync(p => p.Id == id);
                 if (product == null)

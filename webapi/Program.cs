@@ -11,9 +11,15 @@ using webapi.Services;
 
 var builder = WebApplication.CreateBuilder(args);
 
-//add db context
+//add db contexts
 var connectionString = builder.Configuration.GetConnectionString("MyDatabase");
-builder.Services.AddDbContext<ApplicationDbContext>(options =>
+builder.Services.AddDbContext<IdentityDbContext>(options =>
+{
+    options.UseSqlServer(connectionString);
+    options.UseQueryTrackingBehavior(QueryTrackingBehavior.NoTracking);
+});
+
+builder.Services.AddDbContext<StoreDbContext>(options =>
 {
     options.UseSqlServer(connectionString);
     options.UseQueryTrackingBehavior(QueryTrackingBehavior.NoTracking);
@@ -21,7 +27,7 @@ builder.Services.AddDbContext<ApplicationDbContext>(options =>
 
 //add identity
 builder.Services.AddIdentity<User, Role>()
-                .AddEntityFrameworkStores<ApplicationDbContext>()
+                .AddEntityFrameworkStores<IdentityDbContext>()
                 .AddDefaultTokenProviders();
 
 //add extra mapp config
@@ -154,10 +160,11 @@ app.AddAdminUserService();
 if (app.Environment.IsDevelopment())
 {
     using var scope = app.Services.CreateScope();
-    var dbInitializer = scope.ServiceProvider.GetRequiredService<ApplicationDbContext>();
+    var identityDbContext = scope.ServiceProvider.GetRequiredService<IdentityDbContext>();
+    var storeDbContext = scope.ServiceProvider.GetRequiredService<StoreDbContext>();
     var userManager = scope.ServiceProvider.GetRequiredService<UserManager<User>>();
     var roleManager = scope.ServiceProvider.GetRequiredService<RoleManager<Role>>();
-    await DbInitializer.Initialize(dbInitializer, userManager, roleManager);
+    await DbInitializer.Initialize(identityDbContext, storeDbContext, userManager, roleManager);
 }
 
 app.Run();

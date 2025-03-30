@@ -43,7 +43,7 @@ namespace webapi.Services
             async (
                 [FromServices] IConfiguration config,
                 [FromServices] UserManager<User> userManager,
-                [FromServices] ApplicationDbContext db,
+                [FromServices] IdentityDbContext db,
                 [FromBody] UserLoginDto input) =>
             {
                 var user = await userManager.FindByNameAsync(input.UserName);
@@ -78,7 +78,7 @@ namespace webapi.Services
                     {
                         new Claim(ClaimTypes.NameIdentifier, user.Id.ToString()),
                         new Claim(ClaimTypes.Email, user.Email??user.UserName??string.Empty),
-                        new Claim(ClaimTypes.Name, user.DisplayName),
+                        //new Claim(ClaimTypes.Name, user.DisplayName),
                         new Claim(ClaimTypes.Role, roleName??string.Empty),
                     };
 
@@ -95,7 +95,7 @@ namespace webapi.Services
                     {
                         accessToken,
                         user.Email,
-                        user.DisplayName,
+                        //user.DisplayName,
                         roleName,
                         permissions
                     });
@@ -133,7 +133,7 @@ namespace webapi.Services
 
                 return Results.Ok(new
                 {
-                    Name = user.DisplayName,
+                    //Name = user.DisplayName,
                     Email = user.Email
                 });
             });

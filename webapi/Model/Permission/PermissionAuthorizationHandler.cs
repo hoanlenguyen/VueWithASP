@@ -25,7 +25,7 @@ namespace webapi.Model.Permission
                     return Task.CompletedTask;
                 }
                 var userId = Convert.ToInt32(userIdClaim.Value);
-                var db = scope.ServiceProvider.GetRequiredService<ApplicationDbContext>();
+                var db = scope.ServiceProvider.GetRequiredService<IdentityDbContext>();
                 var query = from s in db.UserRoles
                             join sa in db.RoleClaims on s.RoleId equals sa.RoleId
                             where s.UserId == userId && sa.ClaimType == Permissions.Type && sa.ClaimValue == requirement.Permission
