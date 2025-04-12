@@ -2,6 +2,7 @@
 using System.Data;
 using System.Data.Common;
 using System.Diagnostics;
+using webapi.Extensions;
 using webapi.Model.BaseEntities;
 using webapi.Model.Products;
 
@@ -14,13 +15,15 @@ namespace webapi.Data
         private string _contextUser;
         private readonly int? _contextUserId;
 
-        public int? ContextUserId { get { return _contextUserId; } }
+        public int? ContextUserId => _contextUserId;
 
-        //public ExtensionHost Extensions { get; set; } = new();
+        public ExtensionHost Extensions { get; set; } = new();
         public ILogger<StoreDbContext>? Logger { get; }
 
         public StoreDbContext(
             DbContextOptions<StoreDbContext> options,
+            //QueryableVisitor<IQueryableVisitor<IModel>, IModel>? queryableVisitor,
+            //ModelObserver? observer,
             IHttpContextAccessor httpContextAccessor,
             ILoggerFactory loggerFactory,
             ILogger<StoreDbContext> logger
@@ -41,6 +44,18 @@ namespace webapi.Data
             }
 
             SavingChanges += OnSavingChanges;
+            //if (queryableVisitor is not null)
+            //{
+            //    Extensions.TrySetExtension<IQueryableVisitor<IQueryableVisitor<IModel>, IModel>>(queryableVisitor);
+            //}
+            //if (observer is not null)
+            //{
+            //    Extensions.TrySetExtension<IPluginModelObserver>(observer);
+            //}
+            //if (htmlSanitisation is not null)
+            //{
+            //    Extensions.TrySetExtension<IHtmlSanitisation>(htmlSanitisation);
+            //}
         }
         #region Product
 

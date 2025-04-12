@@ -84,9 +84,9 @@ namespace webapi.Data
             {
                 brands = new List<Brand>
                 {
-                    new Brand { Name = "Nike", Description = "Description of Brand...."},
-                    new Brand { Name = "H&M", Description = "Description of Brand...."},
-                    new Brand { Name = "Gucci", Description = "Description of Brand...."},
+                    new Brand { Name = "Nike", Description = "Description of Brand....", IsEnabled = true },
+                    new Brand { Name = "H&M", Description = "Description of Brand....", IsEnabled = true },
+                    new Brand { Name = "Gucci", Description = "Description of Brand....", IsEnabled = true },
                 };
                 await dbContext.AddRangeAsync(brands);
                 await dbContext.SaveChangesAsync();

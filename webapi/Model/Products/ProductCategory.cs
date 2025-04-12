@@ -1,10 +1,11 @@
 ﻿using System.ComponentModel.DataAnnotations;
 using webapi.Enum;
 using webapi.Model.BaseEntities;
+using webapi.Model.Lookup;
 
 namespace webapi.Model.Products
 {
-    public class ProductCategory : BaseAuditModel, IAuditModel
+    public class ProductCategory : BaseAuditModel, IAuditModel, INamedModel, ILookupModel
     {
         [Required]
         [MaxLength(LimitLength.FullName)]

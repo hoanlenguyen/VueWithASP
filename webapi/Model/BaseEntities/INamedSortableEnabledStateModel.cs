@@ -4,7 +4,7 @@ public interface INamedSortableEnabledStateModel : INamedModel, INamedEnabledSta
 {
 }
 
-public abstract class NamedSortableEnabledStateModel<T> : BaseIdentityModel, INamedSortableEnabledStateModel where T : INamedSortableEnabledStateModel
+public abstract class NamedSortableEnabledStateModel<T> : BaseIdentityModel<T>, INamedSortableEnabledStateModel where T : INamedSortableEnabledStateModel
 {
     public bool IsEnabled { get; set; }
     public virtual string Name { get; set; } = default!;

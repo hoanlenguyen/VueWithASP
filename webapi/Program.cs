@@ -156,6 +156,7 @@ app.UseCors(allowSpecificOriginsPolicy);
 //add Services
 app.AddProductService();
 app.AddAdminUserService();
+app.AddNameModelService();
 
 if (app.Environment.IsDevelopment())
 {

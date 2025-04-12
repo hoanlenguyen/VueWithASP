@@ -6,7 +6,7 @@ public interface IAuditModel : IIdentityModel
     public byte[] RowVersion { get; set; }
 }
 
-public abstract class BaseAuditModel : BaseIdentityModel, IAuditModel
+public abstract class BaseAuditModel : BaseIdentityModel<BaseAuditModel>, IAuditModel
 {
     //[SystemValue]
     public virtual string? ChangedByUser { set; get; }

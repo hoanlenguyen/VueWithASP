@@ -4,7 +4,7 @@ using webapi.Model.BaseEntities;
 
 namespace webapi.Model.Products
 {
-    public class Tag : BaseIdentityModel
+    public class Tag : BaseIdentityModel<Tag>
     {
         [Required]
         [MaxLength(LimitLength.ShortName)]

@@ -16,10 +16,6 @@ namespace webapi.Services
             app.MapGet("products", [AllowAnonymous] async ([FromServices] StoreDbContext db, [AsParameters] ProductFilter request) =>
             {
                 var query = db.Products
-                            .Include(p => p.Category)
-                            .Include(p => p.Brand)
-                            .Include(p => p.ProductTags)
-                            .ThenInclude(pt => pt.Tag)
                             .AsNoTracking()
                             .WhereIf(request.Name.IsNotNullOrEmpty(), p => p.Name.Contains(request.Name!))
                             .WhereIf(request.CategoryId.HasValue, p => p.CategoryId == request.CategoryId)
@@ -47,10 +43,7 @@ namespace webapi.Services
             app.MapGet("products/{id:int}", [AllowAnonymous] async Task<IResult> ([FromServices] StoreDbContext db, int id) =>
             {
                 var product = await db.Products
-                                .Include(p => p.Category)
-                                .Include(p => p.Brand)
-                                .Include(p => p.ProductTags)
-                                .ThenInclude(pt => pt.Tag)
+                                .AsNoTracking()
                                 .FirstOrDefaultAsync(p => p.Id == id);
                 return product != null ? Results.Ok(product.Adapt<ProductDTO>()) : Results.NotFound();
             });
