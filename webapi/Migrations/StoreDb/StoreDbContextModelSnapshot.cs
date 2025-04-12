@@ -23,7 +23,7 @@ namespace webapi.Migrations.StoreDb
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder);
 
-            modelBuilder.Entity("webapi.Model.Product.Brand", b =>
+            modelBuilder.Entity("webapi.Model.Products.Brand", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -31,56 +31,27 @@ namespace webapi.Migrations.StoreDb
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
-                    b.Property<string>("ChangedByUser")
-                        .IsRequired()
-                        .ValueGeneratedOnAdd()
-                        .HasMaxLength(200)
-                        .HasColumnType("nvarchar(200)")
-                        .HasDefaultValueSql("(user_name())");
-
                     b.Property<string>("Description")
-                        .IsRequired()
                         .HasMaxLength(100)
                         .HasColumnType("nvarchar(100)");
+
+                    b.Property<bool>("IsEnabled")
+                        .HasColumnType("bit");
 
                     b.Property<string>("Name")
                         .IsRequired()
                         .HasMaxLength(150)
                         .HasColumnType("nvarchar(150)");
 
-                    b.Property<byte[]>("RowVersion")
-                        .IsConcurrencyToken()
-                        .IsRequired()
-                        .ValueGeneratedOnAddOrUpdate()
-                        .HasColumnType("rowversion");
-
-                    b.Property<DateTime>("SystemEnd")
-                        .ValueGeneratedOnAddOrUpdate()
-                        .HasColumnType("datetime2")
-                        .HasColumnName("SystemEnd");
-
-                    b.Property<DateTime>("SystemStart")
-                        .ValueGeneratedOnAddOrUpdate()
-                        .HasColumnType("datetime2")
-                        .HasColumnName("SystemStart");
+                    b.Property<int>("SortOrder")
+                        .HasColumnType("int");
 
                     b.HasKey("Id");
 
                     b.ToTable("Brands", "Store");
-
-                    b.ToTable(tb => tb.IsTemporal(ttb =>
-                            {
-                                ttb.UseHistoryTable("Store_Brands_HISTORY", "Auditing");
-                                ttb
-                                    .HasPeriodStart("SystemStart")
-                                    .HasColumnName("SystemStart");
-                                ttb
-                                    .HasPeriodEnd("SystemEnd")
-                                    .HasColumnName("SystemEnd");
-                            }));
                 });
 
-            modelBuilder.Entity("webapi.Model.Product.Product", b =>
+            modelBuilder.Entity("webapi.Model.Products.Product", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -160,7 +131,7 @@ namespace webapi.Migrations.StoreDb
                             }));
                 });
 
-            modelBuilder.Entity("webapi.Model.Product.ProductCategory", b =>
+            modelBuilder.Entity("webapi.Model.Products.ProductCategory", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -217,7 +188,7 @@ namespace webapi.Migrations.StoreDb
                             }));
                 });
 
-            modelBuilder.Entity("webapi.Model.Product.ProductTag", b =>
+            modelBuilder.Entity("webapi.Model.Products.ProductTag", b =>
                 {
                     b.Property<int>("ProductId")
                         .HasColumnType("int");
@@ -232,7 +203,7 @@ namespace webapi.Migrations.StoreDb
                     b.ToTable("ProductTags", "Store");
                 });
 
-            modelBuilder.Entity("webapi.Model.Product.Tag", b =>
+            modelBuilder.Entity("webapi.Model.Products.Tag", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -250,14 +221,14 @@ namespace webapi.Migrations.StoreDb
                     b.ToTable("Tags", "Store");
                 });
 
-            modelBuilder.Entity("webapi.Model.Product.Product", b =>
+            modelBuilder.Entity("webapi.Model.Products.Product", b =>
                 {
-                    b.HasOne("webapi.Model.Product.Brand", "Brand")
+                    b.HasOne("webapi.Model.Products.Brand", "Brand")
                         .WithMany("Products")
                         .HasForeignKey("BrandId")
                         .OnDelete(DeleteBehavior.SetNull);
 
-                    b.HasOne("webapi.Model.Product.ProductCategory", "Category")
+                    b.HasOne("webapi.Model.Products.ProductCategory", "Category")
                         .WithMany("Products")
                         .HasForeignKey("CategoryId")
                         .OnDelete(DeleteBehavior.SetNull);
@@ -267,15 +238,15 @@ namespace webapi.Migrations.StoreDb
                     b.Navigation("Category");
                 });
 
-            modelBuilder.Entity("webapi.Model.Product.ProductTag", b =>
+            modelBuilder.Entity("webapi.Model.Products.ProductTag", b =>
                 {
-                    b.HasOne("webapi.Model.Product.Product", "Product")
+                    b.HasOne("webapi.Model.Products.Product", "Product")
                         .WithMany("ProductTags")
                         .HasForeignKey("ProductId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("webapi.Model.Product.Tag", "Tag")
+                    b.HasOne("webapi.Model.Products.Tag", "Tag")
                         .WithMany("ProductTags")
                         .HasForeignKey("TagId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -286,22 +257,22 @@ namespace webapi.Migrations.StoreDb
                     b.Navigation("Tag");
                 });
 
-            modelBuilder.Entity("webapi.Model.Product.Brand", b =>
+            modelBuilder.Entity("webapi.Model.Products.Brand", b =>
                 {
                     b.Navigation("Products");
                 });
 
-            modelBuilder.Entity("webapi.Model.Product.Product", b =>
+            modelBuilder.Entity("webapi.Model.Products.Product", b =>
                 {
                     b.Navigation("ProductTags");
                 });
 
-            modelBuilder.Entity("webapi.Model.Product.ProductCategory", b =>
+            modelBuilder.Entity("webapi.Model.Products.ProductCategory", b =>
                 {
                     b.Navigation("Products");
                 });
 
-            modelBuilder.Entity("webapi.Model.Product.Tag", b =>
+            modelBuilder.Entity("webapi.Model.Products.Tag", b =>
                 {
                     b.Navigation("ProductTags");
                 });

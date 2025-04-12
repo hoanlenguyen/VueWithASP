@@ -3,7 +3,7 @@ using System.Data;
 using System.Data.Common;
 using System.Diagnostics;
 using webapi.Model.BaseEntities;
-using webapi.Model.Product;
+using webapi.Model.Products;
 
 namespace webapi.Data
 {
@@ -87,7 +87,7 @@ namespace webapi.Data
         {
             foreach (var entry in ChangeTracker.Entries().ToList())
             {
-                if (entry.Entity is IAuditEntity auditModel && (entry.State == EntityState.Added || entry.State == EntityState.Modified))
+                if (entry.Entity is IAuditModel auditModel && (entry.State == EntityState.Added || entry.State == EntityState.Modified))
                 {
                     auditModel.ChangedByUser = _contextUser;
                 }

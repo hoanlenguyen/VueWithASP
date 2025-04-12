@@ -3,7 +3,7 @@ using webapi.Model.BaseEntities;
 
 namespace webapi.Model.Identity
 {
-    public class UserDetail : BaseAuditEntity, IAuditEntity
+    public class UserDetail : BaseAuditModel, IAuditModel
     {
         [Required]
         [MaxLength(50)]

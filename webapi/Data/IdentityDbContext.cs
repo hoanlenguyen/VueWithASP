@@ -86,7 +86,7 @@ namespace webapi.Data
         {
             foreach (var entry in ChangeTracker.Entries().ToList())
             {
-                if (entry.Entity is IAuditEntity auditModel && (entry.State == EntityState.Added || entry.State == EntityState.Modified))
+                if (entry.Entity is IAuditModel auditModel && (entry.State == EntityState.Added || entry.State == EntityState.Modified))
                 {
                     auditModel.ChangedByUser = _contextUser;
                 }

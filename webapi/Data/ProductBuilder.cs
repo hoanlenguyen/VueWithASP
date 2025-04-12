@@ -1,5 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
-using webapi.Model.Product;
+using webapi.Model.Products;
 
 namespace webapi.Data
 {
@@ -8,7 +8,7 @@ namespace webapi.Data
         public static void BuildProductModels(this ModelBuilder modelBuilder)
         {
             modelBuilder.Entity<Product>().ToTemporalTable("Products", "Store");
-            modelBuilder.Entity<Brand>().ToTemporalTable("Brands", "Store");
+            modelBuilder.Entity<Brand>().ToTable("Brands", "Store");
             modelBuilder.Entity<Tag>().ToTable("Tags", "Store");
             modelBuilder.Entity<ProductCategory>().ToTemporalTable("ProductCategories", "Store");
 

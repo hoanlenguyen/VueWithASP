@@ -1,0 +1,5 @@
+﻿Add-Migration [Update-name] -Context IdentityDbContext -OutputDir Migrations\IdentityDb
+Add-Migration [Update-name] -Context StoreDbContext -OutputDir Migrations\StoreDb
+
+Update-Database -Context IdentityDbContext
+Update-Database -Context StoreDbContext

@@ -6,7 +6,7 @@ namespace webapi.Data
 {
     public static class EntityTypeBuilderExtensions
     {
-        public static void ToTemporalTable<T>(this EntityTypeBuilder<T> entity, string table, string schema, string auditSchema = "Auditing") where T : class, IAuditEntity
+        public static void ToTemporalTable<T>(this EntityTypeBuilder<T> entity, string table, string schema, string auditSchema = "Auditing") where T : class, IAuditModel
         {
             entity.ToTable(table, schema);
 

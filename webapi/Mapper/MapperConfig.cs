@@ -1,6 +1,6 @@
 ﻿using Mapster;
 using webapi.Model.Lookup;
-using webapi.Model.Product;
+using webapi.Model.Products;
 
 namespace webapi.Mapper
 {

@@ -3,7 +3,7 @@ using Microsoft.EntityFrameworkCore;
 using webapi.Enum;
 using webapi.Model.Identity;
 using webapi.Model.Permission;
-using webapi.Model.Product;
+using webapi.Model.Products;
 
 namespace webapi.Data
 {

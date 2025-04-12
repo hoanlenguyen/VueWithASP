@@ -4,7 +4,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using webapi.Data;
 using webapi.Helper;
-using webapi.Model.Product;
+using webapi.Model.Products;
 using webapi.Paging;
 
 namespace webapi.Services
@@ -29,7 +29,6 @@ namespace webapi.Services
                             ;
 
                 var totalCount = await query.CountAsync();
-
 
                 var items = totalCount > 0 ?
                                 await query.OrderAndPaging(request).ProjectToType<ProductDTO>().ToListAsync() :
@@ -76,7 +75,6 @@ namespace webapi.Services
 
                 return Results.Ok(products);
             });
-
 
             app.MapPut("products", [AllowAnonymous] async Task<IResult> ([FromServices] StoreDbContext db, [FromBody] ProductDTO model) =>
             {

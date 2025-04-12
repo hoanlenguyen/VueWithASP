@@ -2,9 +2,9 @@
 using webapi.Enum;
 using webapi.Model.BaseEntities;
 
-namespace webapi.Model.Product
+namespace webapi.Model.Products
 {
-    public class Tag : BaseEntity
+    public class Tag : BaseIdentityModel
     {
         [Required]
         [MaxLength(LimitLength.ShortName)]

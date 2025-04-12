@@ -9,11 +9,11 @@ using webapi.Data;
 
 #nullable disable
 
-namespace webapi.Migrations
+namespace webapi.Migrations.IdentityDb
 {
     [DbContext(typeof(IdentityDbContext))]
-    [Migration("20250330143005_InitialCreateIndentity")]
-    partial class InitialCreateIndentity
+    [Migration("20250412023543_InitialCreate")]
+    partial class InitialCreate
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)

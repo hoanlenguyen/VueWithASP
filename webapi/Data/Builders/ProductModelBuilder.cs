@@ -1,6 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
-using webapi.Data.Builders.Extensions;
-using webapi.Model.Product;
+using webapi.Model.Products;
 
 namespace webapi.Data.Builders;
 
@@ -62,7 +61,7 @@ public static class ProductModelBuilder
     {
         modelBuilder.Entity<Brand>(entity =>
         {
-            entity.ToTemporalTable("Brand", Schema);
+            entity.ToTable("Brand", Schema);
         });
     }
 

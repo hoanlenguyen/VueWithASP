@@ -6,7 +6,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace webapi.Migrations.StoreDb
 {
     /// <inheritdoc />
-    public partial class InitialCreateStore : Migration
+    public partial class InitialCreate : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -20,58 +20,16 @@ namespace webapi.Migrations.StoreDb
                 columns: table => new
                 {
                     Id = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1")
-                        .Annotation("SqlServer:IsTemporal", true)
-                        .Annotation("SqlServer:TemporalHistoryTableName", "Store_Brands_HISTORY")
-                        .Annotation("SqlServer:TemporalHistoryTableSchema", "Auditing")
-                        .Annotation("SqlServer:TemporalPeriodEndColumnName", "SystemEnd")
-                        .Annotation("SqlServer:TemporalPeriodStartColumnName", "SystemStart"),
-                    Name = table.Column<string>(type: "nvarchar(150)", maxLength: 150, nullable: false)
-                        .Annotation("SqlServer:IsTemporal", true)
-                        .Annotation("SqlServer:TemporalHistoryTableName", "Store_Brands_HISTORY")
-                        .Annotation("SqlServer:TemporalHistoryTableSchema", "Auditing")
-                        .Annotation("SqlServer:TemporalPeriodEndColumnName", "SystemEnd")
-                        .Annotation("SqlServer:TemporalPeriodStartColumnName", "SystemStart"),
-                    Description = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: false)
-                        .Annotation("SqlServer:IsTemporal", true)
-                        .Annotation("SqlServer:TemporalHistoryTableName", "Store_Brands_HISTORY")
-                        .Annotation("SqlServer:TemporalHistoryTableSchema", "Auditing")
-                        .Annotation("SqlServer:TemporalPeriodEndColumnName", "SystemEnd")
-                        .Annotation("SqlServer:TemporalPeriodStartColumnName", "SystemStart"),
-                    SystemEnd = table.Column<DateTime>(type: "datetime2", nullable: false)
-                        .Annotation("SqlServer:IsTemporal", true)
-                        .Annotation("SqlServer:TemporalHistoryTableName", "Store_Brands_HISTORY")
-                        .Annotation("SqlServer:TemporalHistoryTableSchema", "Auditing")
-                        .Annotation("SqlServer:TemporalPeriodEndColumnName", "SystemEnd")
-                        .Annotation("SqlServer:TemporalPeriodStartColumnName", "SystemStart"),
-                    SystemStart = table.Column<DateTime>(type: "datetime2", nullable: false)
-                        .Annotation("SqlServer:IsTemporal", true)
-                        .Annotation("SqlServer:TemporalHistoryTableName", "Store_Brands_HISTORY")
-                        .Annotation("SqlServer:TemporalHistoryTableSchema", "Auditing")
-                        .Annotation("SqlServer:TemporalPeriodEndColumnName", "SystemEnd")
-                        .Annotation("SqlServer:TemporalPeriodStartColumnName", "SystemStart"),
-                    ChangedByUser = table.Column<string>(type: "nvarchar(200)", maxLength: 200, nullable: false, defaultValueSql: "(user_name())")
-                        .Annotation("SqlServer:IsTemporal", true)
-                        .Annotation("SqlServer:TemporalHistoryTableName", "Store_Brands_HISTORY")
-                        .Annotation("SqlServer:TemporalHistoryTableSchema", "Auditing")
-                        .Annotation("SqlServer:TemporalPeriodEndColumnName", "SystemEnd")
-                        .Annotation("SqlServer:TemporalPeriodStartColumnName", "SystemStart"),
-                    RowVersion = table.Column<byte[]>(type: "rowversion", rowVersion: true, nullable: false)
-                        .Annotation("SqlServer:IsTemporal", true)
-                        .Annotation("SqlServer:TemporalHistoryTableName", "Store_Brands_HISTORY")
-                        .Annotation("SqlServer:TemporalHistoryTableSchema", "Auditing")
-                        .Annotation("SqlServer:TemporalPeriodEndColumnName", "SystemEnd")
-                        .Annotation("SqlServer:TemporalPeriodStartColumnName", "SystemStart")
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    Name = table.Column<string>(type: "nvarchar(150)", maxLength: 150, nullable: false),
+                    Description = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: true),
+                    IsEnabled = table.Column<bool>(type: "bit", nullable: false),
+                    SortOrder = table.Column<int>(type: "int", nullable: false)
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_Brands", x => x.Id);
-                })
-                .Annotation("SqlServer:IsTemporal", true)
-                .Annotation("SqlServer:TemporalHistoryTableName", "Store_Brands_HISTORY")
-                .Annotation("SqlServer:TemporalHistoryTableSchema", "Auditing")
-                .Annotation("SqlServer:TemporalPeriodEndColumnName", "SystemEnd")
-                .Annotation("SqlServer:TemporalPeriodStartColumnName", "SystemStart");
+                });
 
             migrationBuilder.CreateTable(
                 name: "ProductCategories",
@@ -317,12 +275,7 @@ namespace webapi.Migrations.StoreDb
 
             migrationBuilder.DropTable(
                 name: "Brands",
-                schema: "Store")
-                .Annotation("SqlServer:IsTemporal", true)
-                .Annotation("SqlServer:TemporalHistoryTableName", "Store_Brands_HISTORY")
-                .Annotation("SqlServer:TemporalHistoryTableSchema", "Auditing")
-                .Annotation("SqlServer:TemporalPeriodEndColumnName", "SystemEnd")
-                .Annotation("SqlServer:TemporalPeriodStartColumnName", "SystemStart");
+                schema: "Store");
 
             migrationBuilder.DropTable(
                 name: "ProductCategories",

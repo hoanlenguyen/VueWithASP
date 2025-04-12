@@ -2,16 +2,16 @@
 using webapi.Enum;
 using webapi.Model.BaseEntities;
 
-namespace webapi.Model.Product
+namespace webapi.Model.Products
 {
-    public class Brand : BaseAuditEntity, IAuditEntity
+    public class Brand : NamedSortableEnabledStateModel<Brand>, INamedSortableEnabledStateModel, IDescribedModel
     {
         [Required]
         [MaxLength(LimitLength.FullName)]
-        public string Name { get; set; } = string.Empty;
+        public override string Name { get; set; } = string.Empty;
 
         [MaxLength(LimitLength.ShortDescription)]
-        public string Description { get; set; } = string.Empty;
+        public string? Description { get; set; } = string.Empty;
 
         public ICollection<Product> Products { get; set; } = new HashSet<Product>();
     }

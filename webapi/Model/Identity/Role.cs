@@ -5,7 +5,7 @@ using webapi.Model.BaseEntities;
 
 namespace webapi.Model.Identity
 {
-    public class Role : IdentityRole<int>, IAuditEntity, INotifyPropertyChanged
+    public class Role : IdentityRole<int>, IAuditModel, INotifyPropertyChanged
     {
         public DateTime CreationTime { get; set; } = DateTime.UtcNow.AddHours(1);
         public int? CreatorUserId { get; set; }

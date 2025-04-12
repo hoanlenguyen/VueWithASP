@@ -1,7 +1,7 @@
 ﻿using System.ComponentModel;
 using System.Text.Json.Serialization;
 
-namespace webapi.Model.Product
+namespace webapi.Model.Products
 {
     public class ProductTag
     {

@@ -18,8 +18,8 @@ namespace webapi.Data
             modelBuilder.Entity<UserDetail>(udb =>
             {
                 udb.ToTemporalTable("Users", "Identity");
-                //udb.Property(u => u.Email).HasColumnName("Email").HasMaxLength(200); //set column name the same in User table 
-                udb.Property(u => u.ChangedByUser).HasColumnName("ChangedByUser"); //set column name the same in User table 
+                //udb.Property(u => u.Email).HasColumnName("Email").HasMaxLength(200); //set column name the same in User table
+                udb.Property(u => u.ChangedByUser).HasColumnName("ChangedByUser"); //set column name the same in User table
             });
 
             modelBuilder.Entity<User>(ub =>

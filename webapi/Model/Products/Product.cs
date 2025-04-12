@@ -4,9 +4,9 @@ using System.ComponentModel.DataAnnotations.Schema;
 using webapi.Enum;
 using webapi.Model.BaseEntities;
 
-namespace webapi.Model.Product
+namespace webapi.Model.Products
 {
-    public class Product : BaseAuditEntity, IAuditEntity
+    public class Product : BaseAuditModel, IAuditModel
     {
         [Required]
         [MaxLength(LimitLength.FullName)]

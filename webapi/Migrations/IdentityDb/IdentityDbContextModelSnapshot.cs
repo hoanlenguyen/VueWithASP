@@ -8,7 +8,7 @@ using webapi.Data;
 
 #nullable disable
 
-namespace webapi.Migrations
+namespace webapi.Migrations.IdentityDb
 {
     [DbContext(typeof(IdentityDbContext))]
     partial class IdentityDbContextModelSnapshot : ModelSnapshot

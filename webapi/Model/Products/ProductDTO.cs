@@ -1,7 +1,7 @@
 ﻿using webapi.Model.DTO;
 using webapi.Model.Lookup;
 
-namespace webapi.Model.Product
+namespace webapi.Model.Products
 {
     public class ProductDTO : BaseDTO
     {
